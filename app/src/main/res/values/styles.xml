@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="GridItemView" parent="@style/Widget.MaterialComponents.CardView">
+        <item name="elevation">2dp</item>
+        <item name="android:layout_margin">3dp</item>
+        <item name="android:stateListAnimator">@animator/raise</item>
+    </style>
+</resources>

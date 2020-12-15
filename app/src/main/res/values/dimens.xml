@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="touch_raise">6dp</dimen>
+
+    <!-- Default spacings -->
+    <dimen name="spacing_xsmall">2dp</dimen>
+    <dimen name="spacing_small">4dp</dimen>
+    <dimen name="spacing_medium">8dp</dimen>
+    <dimen name="spacing_large">16dp</dimen>
+
+    <!-- Grids -->
+    <dimen name="grid_image_height_big">170dp</dimen>
+
+    <dimen name="collection_item_detail_height">250dp</dimen>
+</resources>
