@@ -9,3 +9,8 @@ In order to make it work, you must add a keys.properties file at app module dire
 MARVEL_PRIVATE_KEY="yourPrivateKey"
 MARVEL_PUBLIC_KEY="yourPublicKey"
 ```
+
+# Screenshots
+
+![List](art/screenshot_list.png)
+![Detail](art/screenshot_detail.png)
