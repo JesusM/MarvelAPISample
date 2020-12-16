@@ -12,5 +12,5 @@ MARVEL_PUBLIC_KEY="yourPublicKey"
 
 # Screenshots
 
-![List](art/screenshot_list.png)
-![Detail](art/screenshot_detail.png)
+<img src="art/screenshot_list.png" width="350">
+<img src="art/screenshot_detail.png" width="350">
