@@ -1,9 +1,13 @@
 package com.marvelsample.app.ui.characterslist
 
+import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.util.Pair
 import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
@@ -12,6 +16,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
+import com.marvelsample.app.R
 import com.marvelsample.app.databinding.CharactersListActivityBinding
 import com.marvelsample.app.ui.characterslist.adapter.CharactersListAdapter
 import com.marvelsample.app.ui.characterslist.adapter.ListItemTaskDiffCallback
@@ -63,10 +68,22 @@ class CharactersListActivity : AppCompatActivity(), DIAware {
             val adapter = CharactersListAdapter(
                 CoilImageLoader(this@CharactersListActivity),
                 ListItemTaskDiffCallback()
-            ) { item: ListItem, _: View ->
+            ) { item: ListItem, view: View ->
+                val thumb = view.findViewById<ImageView>(R.id.image)
+                val title = view.findViewById<TextView>(R.id.text)
+
                 val intent = Intent(this@CharactersListActivity, DetailActivity::class.java)
                 intent.putExtra(DetailActivity.ITEM_ID_ARG, item.id)
-                startActivity(intent)
+                intent.putExtra(DetailActivity.ITEM_SHARE_THUMB_ARG, thumb.transitionName)
+                intent.putExtra(DetailActivity.ITEM_SHARE_TITLE_ARG, title.transitionName)
+
+                val options: ActivityOptions = ActivityOptions
+                    .makeSceneTransitionAnimation(
+                        this@CharactersListActivity,
+                        Pair.create(thumb, thumb.transitionName),
+                        Pair.create(title, title.transitionName)
+                    )
+                startActivity(intent, options.toBundle())
             }
 
             charactersList.adapter = adapter

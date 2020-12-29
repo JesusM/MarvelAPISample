@@ -46,9 +46,11 @@ class DetailActivity : AppCompatActivity(), DIAware {
 
     companion object {
         const val ITEM_ID_ARG: String = "ITEM_ID_ARG"
+        const val ITEM_SHARE_THUMB_ARG: String = "ITEM_SHARE_THUMB_ARG"
+        const val ITEM_SHARE_TITLE_ARG: String = "ITEM_SHARE_TITLE_ARG"
     }
 
-    val viewModelFactory: AbstractSavedStateViewModelFactory by instance(
+    private val viewModelFactory: AbstractSavedStateViewModelFactory by instance(
         "itemDetailViewModelFactory",
         arg = this
     )
@@ -75,6 +77,9 @@ class DetailActivity : AppCompatActivity(), DIAware {
                     }
                 }
             })
+            postponeEnterTransition()
+            detailActivityHeaderImage.transitionName = intent.getStringExtra(ITEM_SHARE_THUMB_ARG)
+            detailActivityCharacterName.transitionName = intent.getStringExtra(ITEM_SHARE_TITLE_ARG)
             viewModel.load(intent.getIntExtra(ITEM_ID_ARG, -1))
         }
     }
@@ -98,6 +103,10 @@ class DetailActivity : AppCompatActivity(), DIAware {
                 character.thumbnail.fullPath(),
                 null,
                 { bitmap ->
+                    launchUI {
+                        startPostponedEnterTransition()
+                    }
+
                     bitmap?.let { image ->
                         launchUI { coroutineScope ->
                             // Grab the palette from the bitmap loaded.

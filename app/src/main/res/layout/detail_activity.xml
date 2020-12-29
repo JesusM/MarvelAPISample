@@ -15,6 +15,7 @@
             android:layout_width="match_parent"
             android:layout_height="@dimen/collection_item_detail_height"
             android:scaleType="centerCrop"
+            android:transitionName="thumb"
             tools:src="@tools:sample/backgrounds/scenic" />
 
         <androidx.appcompat.widget.LinearLayoutCompat
@@ -27,6 +28,7 @@
                 android:id="@+id/detail_activity_character_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:transitionName="title"
                 android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title"
                 android:textSize="27sp"
                 tools:text="This is a very very long title" />

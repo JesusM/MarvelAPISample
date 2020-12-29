@@ -13,6 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/grid_image_height_big"
         android:scaleType="centerCrop"
+        android:transitionName="thumb"
         tools:src="@tools:sample/backgrounds/scenic" />
 
     <TextView
@@ -24,6 +25,7 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:padding="@dimen/spacing_large"
+        android:transitionName="title"
         tools:background="#333333"
         tools:text="This is the title of the item, it can be very long so better to be sure we use the right layout attrs to display it correctly" />
 

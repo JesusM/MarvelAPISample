@@ -14,8 +14,7 @@ import com.marvelsample.app.ui.utils.textPaletteAsync
 open class ListItemViewHolder(
     private val rootView: View,
     private val imageLoader: ImageLoader
-) :
-    RecyclerView.ViewHolder(rootView) {
+) : RecyclerView.ViewHolder(rootView) {
     private val title = rootView.findViewById<TextView>(R.id.text)
     private val image = rootView.findViewById<ImageView>(R.id.image)
 
