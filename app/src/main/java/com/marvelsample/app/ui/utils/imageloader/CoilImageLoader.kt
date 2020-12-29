@@ -8,48 +8,42 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.util.Log
 import android.widget.ImageView
-import coil.bitmap.BitmapPool
 import coil.load
 import coil.request.ImageRequest
-import coil.size.Size
-import coil.transform.Transformation
+import coil.request.ImageResult
 import coil.util.DebugLogger
 import com.marvelsample.app.BuildConfig
 
 class CoilImageLoader(
     private val context: Context,
     private val imageLoader: coil.ImageLoader = coil.ImageLoader.Builder(context)
-        .crossfade(true) // Show a short crossfade when loading images from network or disk.
+        .allowHardware(false)
         .apply {
             // Enable logging to the standard Android log if this is a debug build.
             if (BuildConfig.DEBUG) {
                 logger(DebugLogger(Log.VERBOSE))
             }
-        }
-        .build()
+        }.build()
 ) : ImageLoader {
     override fun load(url: String, builder: Builder, loadListener: LoadListener, into: ImageView) {
-        into.load(url) {
+        into.load(url, imageLoader = imageLoader) {
             listener(
                 onStart = {
                     loadListener.onStart()
                 },
+                onSuccess = { _: ImageRequest, metadata: ImageResult.Metadata ->
+                    metadata.memoryCacheKey?.let {
+                        val bitmap = imageLoader.memoryCache[it]
+                        loadListener.onBitmapLoaded(bitmap)
+                    }
+                },
                 onError = { _: ImageRequest, _: Throwable ->
+                    loadListener.onLoadFailed()
+                },
+                onCancel = {
                     loadListener.onLoadFailed()
                 }
             )
-            transformations(object : Transformation {
-                override fun key(): String = "loadListenerTransformation"
-
-                override suspend fun transform(
-                    pool: BitmapPool,
-                    input: Bitmap,
-                    size: Size
-                ): Bitmap {
-                    loadListener.onBitmapLoaded(input)
-                    return input
-                }
-            })
         }
     }
 
