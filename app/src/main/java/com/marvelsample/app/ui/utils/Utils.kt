@@ -24,7 +24,11 @@ import androidx.palette.graphics.Palette
 import com.marvelsample.app.App
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 fun Bitmap.paletteAsync(clearFilter: Boolean = false, f: (palette: Palette?) -> Unit) {
     var builder = Palette.from(this)
@@ -126,13 +130,55 @@ fun ProgressBar.showProgress(show: Boolean = true) {
     visibility = if (show) VISIBLE else GONE
 }
 
-fun Bitmap.textPaletteAsync(coroutineScope: CoroutineScope): Deferred<BitmapPalette?> =
+fun Bitmap.textPaletteAsync(coroutineScope: CoroutineScope = GlobalScope): Deferred<BitmapPalette?> =
     coroutineScope.async {
         val palette: Palette = Palette.from(this@textPaletteAsync).generate()
         palette.dominantSwatch?.let {
             BitmapPalette(it.rgb, it.bodyTextColor, it.titleTextColor)
         }
     }
+
+suspend fun Bitmap.textPaletteSync(): BitmapPalette? {
+    try {
+        return object : Operation<BitmapPalette> {
+            override fun performAsync(callback: (BitmapPalette?, Throwable?) -> Unit) {
+                Palette.from(this@textPaletteSync).generate { palette ->
+                    if (palette == null) {
+                        callback.invoke(null, Throwable("Error loading palette"))
+                    } else {
+                        palette.dominantSwatch?.let { swatch ->
+                            callback.invoke(
+                                BitmapPalette(
+                                    swatch.rgb,
+                                    swatch.bodyTextColor,
+                                    swatch.titleTextColor
+                                ), null
+                            )
+                        } ?: callback.invoke(null, Throwable("Error loading swatch"))
+                    }
+                }
+            }
+        }.perform()
+    } catch (e : Exception) {
+        return null
+    }
+}
+
+private suspend fun <T> Operation<T>.perform(): T =
+    suspendCoroutine { continuation ->
+        performAsync { value, exception ->
+            when {
+                exception != null -> // operation had failed
+                    continuation.resumeWithException(exception)
+                else -> // succeeded, there is a value
+                    continuation.resume(value as T)
+            }
+        }
+    }
+
+interface Operation<T> {
+    fun performAsync(callback: (T?, Throwable?) -> Unit)
+}
 
 fun Bitmap.playButtonPaletteAsync(coroutineScope: CoroutineScope): Deferred<BitmapPalette?> =
     coroutineScope.async {

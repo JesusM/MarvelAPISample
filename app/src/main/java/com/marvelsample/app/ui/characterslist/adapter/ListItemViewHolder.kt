@@ -30,7 +30,7 @@ open class ListItemViewHolder(
             image.loadImageAfterMeasure(imageLoader, imageUrl, null, { bitmap ->
                 bitmap?.let { image ->
                     launchUI {
-                        val textSwatch = image.textPaletteAsync(it).await()
+                        val textSwatch = image.textPaletteSync()
                         val backgroundColor = textSwatch?.background
                             ?: rootView.context.getColor(R.color.backgroundLight)
                         val textColor = textSwatch?.primaryText
