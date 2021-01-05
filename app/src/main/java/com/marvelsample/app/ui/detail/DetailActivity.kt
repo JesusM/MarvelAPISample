@@ -4,7 +4,9 @@ import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.*
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -15,7 +17,6 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.marvelsample.app.core.repository.model.characters.Character
-import com.marvelsample.app.ui.base.compose.DetailsTheme
 import com.marvelsample.app.ui.base.model.Result
 import org.kodein.di.*
 import org.kodein.di.android.closestDI
@@ -70,28 +71,26 @@ class DetailActivity : AppCompatActivity(), DIAware {
     @Composable
     fun Bind(viewModel: DetailViewModel) {
         val characterResult by viewModel.itemObservable.observeAsState(Result.Loading)
-        DetailsTheme {
-            Surface(color = MaterialTheme.colors.background) {
-                Scaffold(
-                    topBar = {
-                        TopAppBar(title = {
-                            val text = when (characterResult) {
-                                is Result.Success -> {
-                                    (characterResult as Result.Success<Character>).result.name
-                                }
-                                else -> ""
+        DetailScaffold {
+            Scaffold(
+                topBar = {
+                    TopAppBar(title = {
+                        val text = when (characterResult) {
+                            is Result.Success -> {
+                                (characterResult as Result.Success<Character>).result.name
                             }
-                            Text(text = text)
-                        })
-                    },
-                    bodyContent = {
-                        CharacterDetailCard(
-                            characterResult = characterResult,
-                            modifier = Modifier.padding(16.dp)
-                        )
-                    }
-                )
-            }
+                            else -> ""
+                        }
+                        Text(text = text)
+                    })
+                },
+                bodyContent = {
+                    CharacterDetailCard(
+                        characterResult = characterResult,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            )
         }
     }
 }
