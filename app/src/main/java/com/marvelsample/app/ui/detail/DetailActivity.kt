@@ -12,10 +12,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.setContent
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import com.marvelsample.app.core.repository.model.ExternalCollection
+import com.marvelsample.app.core.repository.model.Thumbnail
 import com.marvelsample.app.core.repository.model.characters.Character
 import com.marvelsample.app.ui.base.model.Result
 import org.kodein.di.*
@@ -68,10 +71,53 @@ class DetailActivity : AppCompatActivity(), DIAware {
         viewModel.load(intent.getIntExtra(ITEM_ID_ARG, -1))
     }
 
+    @Preview(name = "Character preview")
+    @Composable
+    fun DefaultPreview() {
+        val character = Character(
+            createEmptyExternalCollection(),
+            "Description",
+            createEmptyExternalCollection(),
+            1,
+            "",
+            "Character name",
+            "",
+            createEmptyExternalCollection(),
+            createEmptyExternalCollection(),
+            Thumbnail(".jpg", "a"),
+            emptyList()
+        )
+        val characterResult: Result<Character> = Result.Success(character)
+        ThemedScaffold {
+            Scaffold(
+                topBar = {
+                    TopAppBar(title = {
+                        val text = when (characterResult) {
+                            is Result.Success -> {
+                                (characterResult as Result.Success<Character>).result.name
+                            }
+                            else -> ""
+                        }
+                        Text(text = text)
+                    })
+                },
+                bodyContent = {
+                    CharacterDetailCard(
+                        characterResult = characterResult,
+                        modifier = Modifier.padding(16.dp)
+                    )
+                }
+            )
+        }
+    }
+
+    private fun createEmptyExternalCollection(): ExternalCollection =
+        ExternalCollection(0, "", emptyList(), 0)
+
     @Composable
     fun Bind(viewModel: DetailViewModel) {
         val characterResult by viewModel.itemObservable.observeAsState(Result.Loading)
-        DetailScaffold {
+        ThemedScaffold {
             Scaffold(
                 topBar = {
                     TopAppBar(title = {

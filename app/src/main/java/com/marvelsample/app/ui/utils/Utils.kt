@@ -14,18 +14,25 @@ import android.widget.ProgressBar
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.lazy.LazyGridScope
+import androidx.compose.foundation.lazy.LazyItemScope
+import androidx.compose.runtime.Composable
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.PagingDataDiffer
+import androidx.paging.compose.LazyPagingItems
 import androidx.palette.graphics.Palette
 import com.marvelsample.app.App
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
+import kotlinx.coroutines.flow.Flow
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
@@ -203,4 +210,31 @@ fun ProgressBar.changeAccentColor(@ColorInt color: Int) {
 fun ViewModel.getViewModelScope(coroutineScope: CoroutineScope?) =
     coroutineScope ?: this.viewModelScope
 
-fun Context.asApp() = this.applicationContext as App
+/**
+ * Adds the [LazyPagingItems] and their content to the scope where the content of an item is
+ * aware of its local index. The range from 0 (inclusive) to [LazyPagingItems.itemCount] (inclusive)
+ * always represents the full range of presentable items, because every event from
+ * [PagingDataDiffer] will trigger a recomposition.
+ *
+ * @sample androidx.paging.compose.samples.ItemsIndexedDemo
+ *
+ * @param lazyPagingItems the items received from a [Flow] of [PagingData].
+ * @param itemContent the content displayed by a single item. In case the item is `null`, the
+ * [itemContent] method should handle the logic of displaying a placeholder instead of the main
+ * content displayed by an item which is not `null`.
+ */
+fun <T : Any> LazyGridScope.itemsGridIndexed(
+    lazyPagingItems: LazyPagingItems<T>,
+    itemContent: @Composable LazyItemScope.(index: Int, value: T?) -> Unit
+) {
+    // this state recomposes every time the LazyPagingItems receives an update and changes the
+    // value of recomposerPlaceholder
+//        @Suppress("UNUSED_VARIABLE")
+//        val recomposerPlaceholder = lazyPagingItems.recomposerPlaceholder.value
+
+    val items = (0 until lazyPagingItems.itemCount).toList()
+    items(items) { index ->
+        val item = lazyPagingItems[index]
+        itemContent(index, item)
+    }
+}
