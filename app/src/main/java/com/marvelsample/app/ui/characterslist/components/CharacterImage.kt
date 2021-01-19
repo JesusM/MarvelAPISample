@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.res.vectorResource
 import com.marvelsample.app.R
 import dev.chrisbanes.accompanist.coil.CoilImage
 
@@ -28,7 +28,7 @@ fun CharacterImage(
             }
         },
         error = {
-            Image(bitmap = imageResource(R.drawable.ic_launcher_background))
+            Image(imageVector = vectorResource(R.drawable.ic_baseline_face_24))
         }
     )
 }
