@@ -1,4 +1,4 @@
-package com.marvelsample.app.ui.characterslist.components
+package com.marvelsample.app.ui.base.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,7 +10,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun LoadingList(modifier: Modifier) {
+fun Loading(modifier: Modifier) {
     Column(
         modifier = modifier
             .fillMaxWidth()
