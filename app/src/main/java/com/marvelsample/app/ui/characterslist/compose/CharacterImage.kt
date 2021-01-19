@@ -1,4 +1,4 @@
-package com.marvelsample.app.ui.characterslist.components
+package com.marvelsample.app.ui.characterslist.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
@@ -14,11 +14,12 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
 fun CharacterImage(
-    imageUrl: String,
+    imageUrl: String?,
+    characterName : String,
     modifier: Modifier = Modifier
 ) {
     CoilImage(
-        data = imageUrl,
+        data = imageUrl ?: R.drawable.ic_baseline_face_24,
         modifier = modifier,
         fadeIn = true,
         contentScale = ContentScale.Crop,
@@ -28,7 +29,11 @@ fun CharacterImage(
             }
         },
         error = {
-            Image(imageVector = vectorResource(R.drawable.ic_baseline_face_24))
-        }
+            Image(
+                imageVector = vectorResource(R.drawable.ic_baseline_face_24),
+                contentDescription = "Character $characterName error image."
+            )
+        },
+        contentDescription = "Character $characterName image."
     )
 }

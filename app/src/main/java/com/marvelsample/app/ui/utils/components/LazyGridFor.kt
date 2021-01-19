@@ -1,9 +1,9 @@
-package com.marvelsample.app.ui.utils
+package com.marvelsample.app.ui.utils.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyItemScope
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.itemsIndexed
 
@@ -12,11 +12,11 @@ import androidx.paging.compose.itemsIndexed
  *  lazy items into a grid. Therefore, using a list instead but keeping code (commented out) to
  *  wait for updates.
  */
-@ExperimentalFoundationApi
 @Composable
 fun <T : Any> LazyPagingGridFor(
     items: LazyPagingItems<T>,
-    cols: Int = 3,
+    modifier: Modifier,
+//    cols: Int = 3,
     itemContent: @Composable LazyItemScope.(index: Int, value: T) -> Unit,
     gridContent: @Composable LazyItemScope.() -> Unit = { },
 ) {
@@ -33,7 +33,7 @@ fun <T : Any> LazyPagingGridFor(
     // lazy items into a grid. Therefore, using a list instead but keeping code (commented out) to
     // wait for updates.
     //
-    LazyColumn {
+    LazyColumn(modifier = modifier) {
         itemsIndexed(items) { index, item ->
             item?.let {
                 itemContent.invoke(this, index, it)

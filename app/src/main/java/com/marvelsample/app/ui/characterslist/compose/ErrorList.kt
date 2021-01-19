@@ -1,4 +1,4 @@
-package com.marvelsample.app.ui.characterslist.components
+package com.marvelsample.app.ui.characterslist.compose
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

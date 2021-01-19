@@ -1,4 +1,4 @@
-package com.marvelsample.app.ui.characterslist.components
+package com.marvelsample.app.ui.characterslist.compose
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -27,11 +27,14 @@ fun CharacterListItem(character: ListItem, onClick: (Int) -> Unit) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            CharacterImage(
-                character.image,
-                modifier = Modifier
-                    .preferredSize(90.dp)
-            )
+            character.image?.let { image ->
+                CharacterImage(
+                    image,
+                    character.name,
+                    modifier = Modifier
+                        .preferredSize(90.dp)
+                )
+            }
             CharacterTitle(
                 character.name,
                 modifier = Modifier

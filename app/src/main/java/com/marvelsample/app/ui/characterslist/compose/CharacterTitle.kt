@@ -1,4 +1,4 @@
-package com.marvelsample.app.ui.characterslist.components
+package com.marvelsample.app.ui.characterslist.compose
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text

@@ -1,4 +1,4 @@
-package com.marvelsample.app.ui.detail
+package com.marvelsample.app.ui.characterdetails.compose
 
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface

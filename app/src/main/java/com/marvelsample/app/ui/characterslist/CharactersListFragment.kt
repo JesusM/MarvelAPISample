@@ -1,25 +1,23 @@
 package com.marvelsample.app.ui.characterslist
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
-import androidx.core.view.isVisible
+import androidx.compose.material.Scaffold
+import androidx.compose.material.Text
+import androidx.compose.material.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
-import androidx.paging.LoadState
+import androidx.paging.PagingData
 import com.marvelsample.app.R
 import com.marvelsample.app.databinding.CharactersListScreenBinding
-import com.marvelsample.app.ui.characterslist.adapter.CharactersListAdapter
-import com.marvelsample.app.ui.characterslist.adapter.ListItemTaskDiffCallback
-import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
+import com.marvelsample.app.ui.characterdetails.compose.ThemedScaffold
+import com.marvelsample.app.ui.characterslist.compose.CharactersList
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 
@@ -39,45 +37,43 @@ class CharactersListFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         CharactersListScreenBinding.bind(view).apply {
-            val adapter = CharactersListAdapter(
-                CoilImageLoader(requireContext()),
-                ListItemTaskDiffCallback()
-            ) { item: ListItem, view: View ->
-                val thumb = view.findViewById<ImageView>(R.id.image)
-                val title = view.findViewById<TextView>(R.id.text)
-                val extras = FragmentNavigatorExtras(
-                    thumb to "thumb${item.id}",
-                    title to "title${item.id}"
-                )
-
-                val args = Bundle().apply {
-                    putInt("itemId", item.id)
-                }
-
-                findNavController().navigate(R.id.navigateToDetail, args, null, extras)
+            charactersListComposeView.setContent {
+                Bind(characters = viewModel.load())
             }
+        }
+    }
 
-            charactersList.adapter = adapter
+    @Preview(name = "Character preview")
+    @Composable
+    fun DefaultPreview() {
+        val characters = listOf(ListItem(
+            3,
+            "3-D Man Description",
+            "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784.jpg"
+        ))
 
-            lifecycleScope.launch {
-                viewModel.load().collectLatest {
-                    adapter.submitData(it)
-                }
-            }
+        Bind(characters = flowOf(PagingData.from(characters)))
+    }
 
-            lifecycleScope.launch {
-                adapter.loadStateFlow.collectLatest { loadStates ->
-                    Log.d("[CharacterList]", "Current paging state: $loadStates")
-                    charactersListProgress.isVisible = loadStates.refresh is LoadState.Loading
-                    charactersListErrorMessage.apply {
-                        val isError = loadStates.refresh is LoadState.Error
-                        isVisible = isError
-                        if (isError) {
-                            text = (loadStates.refresh as LoadState.Error).error.message
+    @Composable
+    fun Bind(characters: Flow<PagingData<ListItem>>) {
+        ThemedScaffold {
+            Scaffold(
+                topBar = {
+                    TopAppBar(title = {
+                        Text(text = "Characters")
+                    })
+                },
+                bodyContent = {
+                    CharactersList(characters = characters) { characterId : Int ->
+                        val args = Bundle().apply {
+                            putInt("itemId", characterId)
                         }
+
+                        findNavController().navigate(R.id.navigateToDetail, args, null, null)
                     }
                 }
-            }
+            )
         }
     }
 }
