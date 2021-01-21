@@ -18,9 +18,9 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.marvelsample.app.R
 import com.marvelsample.app.databinding.CharactersListActivityBinding
+import com.marvelsample.app.ui.characterdetails.DetailActivity
 import com.marvelsample.app.ui.characterslist.adapter.CharactersListAdapter
 import com.marvelsample.app.ui.characterslist.adapter.ListItemTaskDiffCallback
-import com.marvelsample.app.ui.detail.DetailActivity
 import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch

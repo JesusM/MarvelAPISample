@@ -1,4 +1,4 @@
-package com.marvelsample.app.ui.detail
+package com.marvelsample.app.ui.characterdetails
 
 import android.os.Bundle
 import android.view.View

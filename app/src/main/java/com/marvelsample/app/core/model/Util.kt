@@ -1,4 +1,4 @@
-package com.marvelsample.app.core.repository.model
+package com.marvelsample.app.core.model
 
 fun Thumbnail.fullPath(): String? {
     if (path.isEmpty() or extension.isEmpty()) {

@@ -1,6 +1,7 @@
 package com.marvelsample.app.core.repository.network
 
-import com.marvelsample.app.core.repository.network.model.CharacterListResponse
+import com.marvelsample.app.core.model.Character
+import com.marvelsample.app.core.repository.network.model.ListResponse
 import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -14,7 +15,7 @@ interface ApiService {
         @Query("hash") hash: String,
         @Query("offset") offset: Int,
         @Query("limit") limit: Int,
-    ): Response<CharacterListResponse>
+    ): Response<ListResponse<Character>>
 
     @GET("/v1/public/characters/{characterId}")
     suspend fun getCharacter(
@@ -22,5 +23,5 @@ interface ApiService {
         @Query("ts") ts: String,
         @Query("apikey") apiKey: String,
         @Query("hash") hash: String,
-    ): Response<CharacterListResponse>
+    ): Response<ListResponse<Character>>
 }

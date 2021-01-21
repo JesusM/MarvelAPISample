@@ -1,6 +1,6 @@
-package com.marvelsample.app.core.repository.model.base
+package com.marvelsample.app.core.model.base
 
-import com.marvelsample.app.core.repository.model.base.error.ResourceError
+import com.marvelsample.app.core.model.base.error.ResourceError
 
 sealed class Resource<out T> {
     data class Error(val error: ResourceError) : Resource<Nothing>()

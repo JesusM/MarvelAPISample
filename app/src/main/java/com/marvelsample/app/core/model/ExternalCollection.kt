@@ -1,4 +1,4 @@
-package com.marvelsample.app.core.repository.model
+package com.marvelsample.app.core.model
 
 data class ExternalCollection (
     val available: Int,

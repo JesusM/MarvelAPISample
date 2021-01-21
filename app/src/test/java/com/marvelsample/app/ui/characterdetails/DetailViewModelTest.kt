@@ -1,13 +1,13 @@
-package com.marvelsample.app.ui.detail
+package com.marvelsample.app.ui.characterdetails
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.marvelsample.app.core.repository.CharacterDetailsRepository
-import com.marvelsample.app.core.repository.model.ExternalCollection
-import com.marvelsample.app.core.repository.model.Thumbnail
-import com.marvelsample.app.core.repository.model.base.Resource
-import com.marvelsample.app.core.repository.model.base.error.ResourceError
-import com.marvelsample.app.core.repository.model.characters.Character
+import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
+import com.marvelsample.app.core.model.ExternalCollection
+import com.marvelsample.app.core.model.Thumbnail
+import com.marvelsample.app.core.model.base.Resource
+import com.marvelsample.app.core.model.base.error.ResourceError
+import com.marvelsample.app.core.model.Character
 import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCase
 import com.marvelsample.app.ui.base.model.Result
 import com.nhaarman.mockitokotlin2.mock

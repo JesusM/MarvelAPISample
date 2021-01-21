@@ -2,13 +2,13 @@ package com.marvelsample.app.ui.characterslist
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.paging.PagingSource
-import com.marvelsample.app.core.repository.model.ExternalCollection
-import com.marvelsample.app.core.repository.model.Thumbnail
-import com.marvelsample.app.core.repository.model.base.Pager
-import com.marvelsample.app.core.repository.model.base.Resource
-import com.marvelsample.app.core.repository.model.base.error.ResourceError
-import com.marvelsample.app.core.repository.model.characters.Character
-import com.marvelsample.app.core.repository.model.fullPath
+import com.marvelsample.app.core.model.ExternalCollection
+import com.marvelsample.app.core.model.Thumbnail
+import com.marvelsample.app.core.model.base.Pager
+import com.marvelsample.app.core.model.base.Resource
+import com.marvelsample.app.core.model.base.error.ResourceError
+import com.marvelsample.app.core.model.Character
+import com.marvelsample.app.core.model.fullPath
 import com.marvelsample.app.core.usecases.characterslist.CharactersListUseCase
 import com.nhaarman.mockitokotlin2.any
 import kotlinx.coroutines.Dispatchers

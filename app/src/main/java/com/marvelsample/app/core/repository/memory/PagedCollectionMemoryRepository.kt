@@ -1,8 +1,8 @@
 package com.marvelsample.app.core.repository.memory
 
-import com.marvelsample.app.core.repository.model.base.Pager
-import com.marvelsample.app.core.repository.model.base.Resource
-import com.marvelsample.app.core.repository.model.base.error.ResourceError
+import com.marvelsample.app.core.model.base.Pager
+import com.marvelsample.app.core.model.base.Resource
+import com.marvelsample.app.core.model.base.error.ResourceError
 
 open class PagedCollectionMemoryRepository<T>(
     private val size: Int = 200,

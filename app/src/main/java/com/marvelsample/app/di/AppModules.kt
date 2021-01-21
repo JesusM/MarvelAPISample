@@ -1,14 +1,18 @@
 package com.marvelsample.app.di
 
 import com.marvelsample.app.BuildConfig
-import com.marvelsample.app.core.repository.CharacterDetailsRepository
-import com.marvelsample.app.core.repository.CharactersListRepository
+import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
+import com.marvelsample.app.core.usecases.characterslist.repository.CharactersListRepository
 import com.marvelsample.app.core.repository.memory.ItemMemoryRepository
 import com.marvelsample.app.core.repository.memory.PagedCollectionMemoryRepository
-import com.marvelsample.app.core.repository.model.characters.Character
+import com.marvelsample.app.core.model.Character
 import com.marvelsample.app.core.repository.network.*
 import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCase
+import com.marvelsample.app.core.usecases.characterdetails.repository.network.CharacterDetailsNetworkRepository
+import com.marvelsample.app.core.usecases.characterdetails.repository.network.CharacterDetailsNetworkRepositoryImpl
 import com.marvelsample.app.core.usecases.characterslist.CharactersListUseCase
+import com.marvelsample.app.core.usecases.characterslist.repository.network.CharacterListNetworkRepository
+import com.marvelsample.app.core.usecases.characterslist.repository.network.CharacterListNetworkRepositoryImpl
 import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
 import com.marvelsample.app.ui.utils.imageloader.ImageLoader
 import okhttp3.OkHttpClient

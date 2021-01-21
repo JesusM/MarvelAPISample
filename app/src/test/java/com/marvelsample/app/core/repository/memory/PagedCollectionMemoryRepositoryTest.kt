@@ -1,7 +1,7 @@
 package com.marvelsample.app.core.repository.memory
 
-import com.marvelsample.app.core.repository.model.base.Resource
-import com.marvelsample.app.core.repository.model.base.error.ResourceError
+import com.marvelsample.app.core.model.base.Resource
+import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.repository.base.Foo
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue

@@ -1,11 +1,12 @@
-package com.marvelsample.app.core.repository.network
+package com.marvelsample.app.core.usecases.characterslist.repository.network
 
-import com.marvelsample.app.core.repository.model.base.Pager
-import com.marvelsample.app.core.repository.model.base.Resource
-import com.marvelsample.app.core.repository.model.base.error.ResourceError
-import com.marvelsample.app.core.repository.model.characters.Character
 import com.marvelsample.app.core.repository.base.generateHash
 import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
+import com.marvelsample.app.core.model.base.Pager
+import com.marvelsample.app.core.model.base.Resource
+import com.marvelsample.app.core.model.base.error.ResourceError
+import com.marvelsample.app.core.model.Character
+import com.marvelsample.app.core.repository.network.ApiService
 import java.util.*
 
 class CharacterListNetworkRepositoryImpl(

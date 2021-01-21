@@ -1,11 +1,11 @@
-package com.marvelsample.app.ui.detail
+package com.marvelsample.app.ui.characterdetails
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.marvelsample.app.core.repository.model.base.Resource
-import com.marvelsample.app.core.repository.model.fullPath
+import com.marvelsample.app.core.model.base.Resource
+import com.marvelsample.app.core.model.fullPath
 import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCase
 import com.marvelsample.app.ui.base.model.Result
 import kotlinx.coroutines.CoroutineDispatcher

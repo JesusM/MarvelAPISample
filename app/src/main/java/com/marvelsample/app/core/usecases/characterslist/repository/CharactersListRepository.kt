@@ -1,11 +1,11 @@
-package com.marvelsample.app.core.repository
+package com.marvelsample.app.core.usecases.characterslist.repository
 
-import com.marvelsample.app.core.repository.model.base.Pager
-import com.marvelsample.app.core.repository.model.base.Resource
-import com.marvelsample.app.core.repository.model.characters.Character
 import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
 import com.marvelsample.app.core.repository.memory.PagedCollectionMemoryRepository
-import com.marvelsample.app.core.repository.network.CharacterListNetworkRepository
+import com.marvelsample.app.core.model.Character
+import com.marvelsample.app.core.model.base.Pager
+import com.marvelsample.app.core.model.base.Resource
+import com.marvelsample.app.core.usecases.characterslist.repository.network.CharacterListNetworkRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext

@@ -1,6 +1,6 @@
 package com.marvelsample.app.ui.base.model
 
-import com.marvelsample.app.core.repository.model.base.error.ResourceError
+import com.marvelsample.app.core.model.base.error.ResourceError
 
 sealed class Result<out T> {
     object Loading : Result<Nothing>()

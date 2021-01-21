@@ -1,14 +1,13 @@
 package com.marvelsample.app.core.repository.network.model
 
-import com.marvelsample.app.core.repository.model.base.Pager
-import com.marvelsample.app.core.repository.model.characters.Character
+import com.marvelsample.app.core.model.base.Pager
 
-data class CharacterListResponse(
+data class ListResponse<T>(
     val code: Int,
     val status: String,
     val copyright: String,
     val attributionText: String,
     val attributionHTML: String,
     val etag: String,
-    val data: Pager<Character>
+    val data: Pager<T>
 )

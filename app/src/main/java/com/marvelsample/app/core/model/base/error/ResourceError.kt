@@ -1,4 +1,4 @@
-package com.marvelsample.app.core.repository.model.base.error
+package com.marvelsample.app.core.model.base.error
 
 sealed class ResourceError {
     object EmptyContent : ResourceError()

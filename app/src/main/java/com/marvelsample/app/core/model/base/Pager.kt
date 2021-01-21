@@ -1,4 +1,4 @@
-package com.marvelsample.app.core.repository.model.base
+package com.marvelsample.app.core.model.base
 
 import androidx.annotation.Keep
 

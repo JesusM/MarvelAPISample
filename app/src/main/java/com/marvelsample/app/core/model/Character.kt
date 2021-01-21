@@ -1,8 +1,4 @@
-package com.marvelsample.app.core.repository.model.characters
-
-import com.marvelsample.app.core.repository.model.ExternalCollection
-import com.marvelsample.app.core.repository.model.Thumbnail
-import com.marvelsample.app.core.repository.model.Url
+package com.marvelsample.app.core.model
 
 data class Character(
     val id: Int,

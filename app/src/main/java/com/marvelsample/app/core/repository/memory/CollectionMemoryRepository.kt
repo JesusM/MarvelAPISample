@@ -1,7 +1,7 @@
 package com.marvelsample.app.core.repository.memory
 
-import com.marvelsample.app.core.repository.model.base.Resource
-import com.marvelsample.app.core.repository.model.base.error.ResourceError
+import com.marvelsample.app.core.model.base.Resource
+import com.marvelsample.app.core.model.base.error.ResourceError
 
 open class CollectionMemoryRepository<T>(
     private val items: MutableList<T> = mutableListOf()

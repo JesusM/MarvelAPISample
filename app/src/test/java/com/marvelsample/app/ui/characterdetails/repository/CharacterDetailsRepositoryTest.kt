@@ -1,11 +1,12 @@
-package com.marvelsample.app.core.repository
+package com.marvelsample.app.ui.characterdetails.repository
 
-import com.marvelsample.app.core.repository.model.base.Resource
-import com.marvelsample.app.core.repository.model.base.error.ResourceError
-import com.marvelsample.app.core.repository.model.characters.Character
+import com.marvelsample.app.core.model.Character
+import com.marvelsample.app.core.model.base.Resource
+import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.repository.base.MainCoroutineRule
 import com.marvelsample.app.core.repository.memory.ItemMemoryRepository
-import com.marvelsample.app.core.repository.network.CharacterDetailsNetworkRepository
+import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
+import com.marvelsample.app.core.usecases.characterdetails.repository.network.CharacterDetailsNetworkRepository
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
