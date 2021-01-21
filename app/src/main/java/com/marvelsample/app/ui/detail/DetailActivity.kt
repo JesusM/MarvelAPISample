@@ -8,8 +8,6 @@ import androidx.lifecycle.AbstractSavedStateViewModelFactory
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import com.marvelsample.app.R
-import com.marvelsample.app.core.repository.model.characters.Character
-import com.marvelsample.app.core.repository.model.fullPath
 import com.marvelsample.app.databinding.DetailActivityBinding
 import com.marvelsample.app.ui.base.model.Result
 import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
@@ -85,7 +83,7 @@ class DetailActivity : AppCompatActivity(), DIAware {
     }
 
     private fun bindItem(
-        character: Character,
+        character: CharacterModel,
         binding: DetailActivityBinding
     ) {
         binding.apply {
@@ -98,33 +96,35 @@ class DetailActivity : AppCompatActivity(), DIAware {
                 visibility = View.VISIBLE
                 text = character.description
             }
-            detailActivityHeaderImage.loadImageAfterMeasure(
-                CoilImageLoader(this@DetailActivity),
-                character.thumbnail.fullPath(),
-                null,
-                { bitmap ->
-                    launchUI {
-                        startPostponedEnterTransition()
-                    }
+            character.image?.let {
+                detailActivityHeaderImage.loadImageAfterMeasure(
+                    CoilImageLoader(this@DetailActivity),
+                    character.image,
+                    null,
+                    { bitmap ->
+                        launchUI {
+                            startPostponedEnterTransition()
+                        }
 
-                    bitmap?.let { image ->
-                        launchUI { coroutineScope ->
-                            // Grab the palette from the bitmap loaded.
-                            val textSwatch = image.textPaletteAsync(coroutineScope).await()
+                        bitmap?.let { image ->
+                            launchUI { coroutineScope ->
+                                // Grab the palette from the bitmap loaded.
+                                val textSwatch = image.textPaletteAsync(coroutineScope).await()
 
-                            // Once the palette is fetched, use its "text palette" for UI elements.
-                            val backgroundColor = textSwatch?.background
-                                ?: detailActivityHeaderImage.context.getColor(R.color.backgroundLight)
-                            val textColor = textSwatch?.primaryText
-                                ?: detailActivityHeaderImage.context.getColor(R.color.primaryTextColor)
+                                // Once the palette is fetched, use its "text palette" for UI elements.
+                                val backgroundColor = textSwatch?.background
+                                    ?: detailActivityHeaderImage.context.getColor(R.color.backgroundLight)
+                                val textColor = textSwatch?.primaryText
+                                    ?: detailActivityHeaderImage.context.getColor(R.color.primaryTextColor)
 
-                            detailActivityCharacterName.apply {
-                                setBackgroundColor(backgroundColor)
-                                setTextColor(textColor)
+                                detailActivityCharacterName.apply {
+                                    setBackgroundColor(backgroundColor)
+                                    setTextColor(textColor)
+                                }
                             }
                         }
-                    }
-                })
+                    })
+            }
         }
     }
 

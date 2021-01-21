@@ -11,7 +11,6 @@ import com.marvelsample.app.core.repository.model.characters.Character
 import com.marvelsample.app.core.repository.model.fullPath
 import com.marvelsample.app.core.usecases.characterslist.CharactersListUseCase
 import com.nhaarman.mockitokotlin2.any
-import org.junit.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -19,6 +18,7 @@ import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runBlockingTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
+import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -59,16 +59,16 @@ class CharactersSourceTest {
         val repositoryContent: MutableList<Character> = mutableListOf()
         val expectedId = 1
         val element = Character(
-            createEmptyExternalCollection(),
-            "",
-            createEmptyExternalCollection(),
             expectedId,
             "",
             "",
+            Thumbnail("", ""),
+            createEmptyExternalCollection(),
+            createEmptyExternalCollection(),
+            "",
             "",
             createEmptyExternalCollection(),
             createEmptyExternalCollection(),
-            Thumbnail("", ""),
             emptyList()
         )
         repositoryContent.add(

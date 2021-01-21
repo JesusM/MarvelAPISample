@@ -2,10 +2,12 @@ package com.marvelsample.app.ui.detail
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.marvelsample.app.core.repository.CharacterDetailsRepository
+import com.marvelsample.app.core.repository.model.ExternalCollection
+import com.marvelsample.app.core.repository.model.Thumbnail
 import com.marvelsample.app.core.repository.model.base.Resource
 import com.marvelsample.app.core.repository.model.base.error.ResourceError
 import com.marvelsample.app.core.repository.model.characters.Character
-import com.marvelsample.app.core.repository.CharacterDetailsRepository
 import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCase
 import com.marvelsample.app.ui.base.model.Result
 import com.nhaarman.mockitokotlin2.mock
@@ -44,7 +46,7 @@ class DetailViewModelTest {
     @Test
     fun `view model request posts loading state first`() = runBlockingTest {
         val mock = Mockito.mock(CharacterDetailsRepository::class.java)
-        val observer = mock<Observer<Result<Character>>>()
+        val observer = mock<Observer<Result<CharacterModel>>>()
         viewModel = DetailViewModel(
             CharacterDetailsUseCase(mock),
             dispatcher = testCoroutineDispatcher
@@ -57,25 +59,40 @@ class DetailViewModelTest {
 
     @Test
     fun `view model posts success state`() = runBlockingTest {
+        val observer = mock<Observer<Result<CharacterModel>>>()
+        val expectedName = "name"
+        val element = Character(
+            1,
+            expectedName,
+            "",
+            Thumbnail("", ""),
+            createEmptyExternalCollection(),
+            createEmptyExternalCollection(),
+            "",
+            "",
+            createEmptyExternalCollection(),
+            createEmptyExternalCollection(),
+            emptyList()
+        )
+        val repositoryCharacter = CharacterModel(expectedName, "", null)
+
         val mockRepository = mock<CharacterDetailsRepository>()
-        val observer = mock<Observer<Result<Character>>>()
-        val characterMock = mock<Character>()
-        val expectedResult = Resource.Success(characterMock)
-        Mockito.`when`(mockRepository.getItem(anyInt())).thenReturn(expectedResult)
+        Mockito.`when`(mockRepository.getItem(anyInt())).thenReturn(Resource.Success(element))
         viewModel = DetailViewModel(
             CharacterDetailsUseCase(mockRepository),
             dispatcher = testCoroutineDispatcher
         )
         viewModel.itemObservable.observeForever(observer)
+
         viewModel.load(0)
 
-        verify(observer).onChanged(Result.Success(characterMock))
+        verify(observer).onChanged(Result.Success(repositoryCharacter))
     }
 
     @Test
     fun `view model posts correct error state`() = runBlockingTest {
         val mockRepository = mock<CharacterDetailsRepository>()
-        val observer = mock<Observer<Result<Character>>>()
+        val observer = mock<Observer<Result<CharacterModel>>>()
         val expectedError = ResourceError.EmptyContent
         Mockito.`when`(mockRepository.getItem(anyInt()))
             .thenReturn(Resource.Error(expectedError))
@@ -88,4 +105,7 @@ class DetailViewModelTest {
 
         verify(observer).onChanged(Result.Error(expectedError))
     }
+
+    private fun createEmptyExternalCollection(): ExternalCollection =
+        ExternalCollection(0, "", emptyList(), 0)
 }

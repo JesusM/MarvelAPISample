@@ -26,7 +26,7 @@ open class ListItemViewHolder(
             setTextColor(rootView.context.getColor(R.color.primaryTextColor))
         }
 
-        item.image.let { imageUrl ->
+        item.image?.let { imageUrl ->
             image.loadImageAfterMeasure(imageLoader, imageUrl, null, { bitmap ->
                 bitmap?.let { image ->
                     launchUI {
@@ -43,7 +43,7 @@ open class ListItemViewHolder(
             })
 
             image.transitionName = "thumb${item.id}"
-            title.transitionName = "name${item.id}"
         }
+        title.transitionName = "name${item.id}"
     }
 }
