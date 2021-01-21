@@ -13,8 +13,8 @@ import com.marvelsample.app.core.repository.model.fullPath
 import com.marvelsample.app.databinding.DetailActivityBinding
 import com.marvelsample.app.ui.base.model.Result
 import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
+import com.marvelsample.app.ui.utils.imageloader.loadImageAfterMeasure
 import com.marvelsample.app.ui.utils.launchUI
-import com.marvelsample.app.ui.utils.loadImageAfterMeasure
 import com.marvelsample.app.ui.utils.textPaletteAsync
 import org.kodein.di.*
 import org.kodein.di.android.closestDI

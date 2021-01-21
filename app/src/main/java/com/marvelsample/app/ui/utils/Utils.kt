@@ -10,11 +10,9 @@ import android.view.View
 import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.ProgressBar
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.BlendModeColorFilterCompat
@@ -23,9 +21,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
-import com.marvelsample.app.ui.utils.imageloader.Builder
-import com.marvelsample.app.ui.utils.imageloader.ImageLoader
-import com.marvelsample.app.ui.utils.imageloader.LoadListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -38,81 +33,6 @@ fun Bitmap.paletteAsync(clearFilter: Boolean = false, f: (palette: Palette?) -> 
     builder.generate {
         f(it)
     }
-}
-
-fun ImageView.loadImageAfterMeasureWithPalette(
-    imageLoader: ImageLoader,
-    image: String?,
-    functionToManipulatePalette: (palette: Palette) -> Unit,
-    functionToManipulateSuccessfulLoad: (bitmap: Bitmap?) -> Unit = {},
-    resize: Boolean = false,
-    @DrawableRes defaultImage: Int? = null
-) {
-    setImageBitmap(null)
-    image?.let { imageUrl ->
-        loadImageAfterMeasure(imageLoader, imageUrl, null, {
-            functionToManipulateSuccessfulLoad.invoke(it)
-            it?.paletteAsync { palette ->
-                palette?.apply {
-                    functionToManipulatePalette(this)
-                }
-            }
-        }, resize = resize, defaultImage = defaultImage)
-    }
-}
-
-fun ImageView.loadImageAfterMeasure(
-    imageLoader: ImageLoader, image: String, progressBar: ProgressBar? = null,
-    functionToHandleSuccessfulDownload: ((bitmap: Bitmap?) -> Unit) = {},
-    resize: Boolean = true,
-    @DrawableRes defaultImage: Int? = null
-) {
-    setImageBitmap(null)
-    afterMeasured {
-        loadImage(
-            imageLoader,
-            image,
-            progressBar,
-            functionToHandleSuccessfulDownload,
-            resize,
-            defaultImage
-        )
-    }
-}
-
-fun ImageView.loadImage(
-    imageLoader: ImageLoader, url: String, progressBar: ProgressBar? = null,
-    functionToHandleSuccessfulDownload: ((bitmap: Bitmap?) -> Unit) = {},
-    resize: Boolean = false,
-    @DrawableRes defaultImage: Int? = null
-) {
-    val builder = Builder()
-    if (resize) {
-        builder.resize(width, height)
-    }
-
-    defaultImage?.let {
-        builder.placeHolder(it).error(it)
-    }
-
-    val listener = object : LoadListener {
-        override fun onLoadFailed() {
-            progressBar?.visibility = GONE
-            functionToHandleSuccessfulDownload.invoke(null)
-        }
-
-        override fun onStart() {
-            progressBar?.visibility = VISIBLE
-        }
-
-        override fun onBitmapLoaded(bitmap: Bitmap?) {
-            progressBar?.visibility = GONE
-            bitmap?.let {
-                functionToHandleSuccessfulDownload.invoke(it)
-            }
-        }
-    }
-    imageLoader.load(url, builder, listener, this)
 }
 
 fun AppCompatActivity.inflateFragment(

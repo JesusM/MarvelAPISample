@@ -7,8 +7,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.marvelsample.app.R
 import com.marvelsample.app.ui.characterslist.ListItem
 import com.marvelsample.app.ui.utils.imageloader.ImageLoader
+import com.marvelsample.app.ui.utils.imageloader.loadImageAfterMeasure
 import com.marvelsample.app.ui.utils.launchUI
-import com.marvelsample.app.ui.utils.loadImageAfterMeasure
 import com.marvelsample.app.ui.utils.textPaletteAsync
 
 open class ListItemViewHolder(
