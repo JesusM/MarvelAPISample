@@ -7,10 +7,12 @@ import com.marvelsample.app.core.repository.memory.PagedCollectionMemoryReposito
 import com.marvelsample.app.core.repository.network.ApiClient
 import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCase
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
+import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepositoryImpl
 import com.marvelsample.app.core.usecases.characterdetails.repository.network.CharacterDetailsNetworkRepository
 import com.marvelsample.app.core.usecases.characterdetails.repository.network.CharacterDetailsNetworkRepositoryImpl
 import com.marvelsample.app.core.usecases.characterslist.CharactersListUseCase
 import com.marvelsample.app.core.usecases.characterslist.repository.CharactersListRepository
+import com.marvelsample.app.core.usecases.characterslist.repository.CharactersListRepositoryImpl
 import com.marvelsample.app.core.usecases.characterslist.repository.network.CharacterListNetworkRepository
 import com.marvelsample.app.core.usecases.characterslist.repository.network.CharacterListNetworkRepositoryImpl
 import com.marvelsample.app.ui.characterdetails.DetailViewModel
@@ -52,14 +54,14 @@ val repositoryModule = module {
         ItemMemoryRepository()
     }
 
-    single(named("charactersListRepository")) {
-        CharactersListRepository(
+    single<CharactersListRepository>(named("charactersListRepository")) {
+        CharactersListRepositoryImpl(
             get(named("charactersMemoryRepository")),
             get(named("charactersNetworkRepository")),
         )
     }
-    single(named("characterDetailsRepository")) {
-        CharacterDetailsRepository(
+    single<CharacterDetailsRepository>(named("characterDetailsRepository")) {
+        CharacterDetailsRepositoryImpl(
             get(named("characterMemoryRepository")),
             get(named("characterNetworkRepository")),
         )

@@ -7,7 +7,7 @@ import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.repository.base.MainCoroutineRule
 import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
 import com.marvelsample.app.core.repository.memory.PagedCollectionMemoryRepository
-import com.marvelsample.app.core.usecases.characterslist.repository.CharactersListRepository
+import com.marvelsample.app.core.usecases.characterslist.repository.CharactersListRepositoryImpl
 import com.marvelsample.app.core.usecases.characterslist.repository.network.CharacterListNetworkRepository
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,7 @@ class CharactersListRepositoryTest {
             val emptyMemoryRepository = PagedCollectionMemoryRepository<Character>()
             val emptyNetworkRepository = EmptyNetworkRepository()
             val listRepository =
-                CharactersListRepository(
+                CharactersListRepositoryImpl(
                     emptyMemoryRepository,
                     emptyNetworkRepository,
                     IODispatcher = testDispatcher
@@ -67,7 +67,7 @@ class CharactersListRepositoryTest {
             val memoryElement = Mockito.mock(Character::class.java)
             memoryRepository.add(listOf(memoryElement))
             val listRepository =
-                CharactersListRepository(
+                CharactersListRepositoryImpl(
                     memoryRepository,
                     EmptyNetworkRepository(),
                     IODispatcher = testDispatcher
@@ -89,7 +89,7 @@ class CharactersListRepositoryTest {
             Mockito.`when`(networkRepository.getCharacters(collectionQuery))
                 .thenReturn(Resource.Success(Pager(listOf(networkElement))))
 
-            val listRepository = CharactersListRepository(
+            val listRepository = CharactersListRepositoryImpl(
                 emptyMemoryRepository,
                 networkRepository,
                 IODispatcher = testDispatcher
@@ -113,7 +113,7 @@ class CharactersListRepositoryTest {
                 .thenReturn(Resource.Error(ResourceError.EmptyContent))
             val networkElement = Mockito.mock(Character::class.java)
             val newElements = listOf(networkElement)
-            val listRepository = CharactersListRepository(
+            val listRepository = CharactersListRepositoryImpl(
                 emptyMemoryRepository,
                 object : CharacterListNetworkRepository {
                     override suspend fun getCharacters(collectionQuery: CollectionRequestParams): Resource<Pager<Character>> {
@@ -134,7 +134,7 @@ class CharactersListRepositoryTest {
             memoryRepository.add(createNItems(20))
             val emptyNetworkRepository = EmptyNetworkRepository()
             val listRepository =
-                CharactersListRepository(
+                CharactersListRepositoryImpl(
                     memoryRepository,
                     emptyNetworkRepository,
                     IODispatcher = testDispatcher

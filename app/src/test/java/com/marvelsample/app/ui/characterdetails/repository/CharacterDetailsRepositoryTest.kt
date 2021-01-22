@@ -5,7 +5,7 @@ import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.repository.base.MainCoroutineRule
 import com.marvelsample.app.core.repository.memory.ItemMemoryRepository
-import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
+import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepositoryImpl
 import com.marvelsample.app.core.usecases.characterdetails.repository.network.CharacterDetailsNetworkRepository
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
@@ -49,7 +49,7 @@ class CharacterDetailsRepositoryTest {
             val emptyMemoryRepository = ItemMemoryRepository<Int, Character>()
             val emptyNetworkRepository = EmptyNetworkRepository()
             val repository =
-                CharacterDetailsRepository(
+                CharacterDetailsRepositoryImpl(
                     emptyMemoryRepository,
                     emptyNetworkRepository,
                     IODispatcher = testDispatcher
@@ -69,7 +69,7 @@ class CharacterDetailsRepositoryTest {
             val expectedItemId = 0
             Mockito.`when`(memoryRepository.get(anyInt())).thenReturn(Resource.Success(memoryElement))
             val repository =
-                CharacterDetailsRepository(
+                CharacterDetailsRepositoryImpl(
                     memoryRepository,
                     EmptyNetworkRepository(),
                     IODispatcher = testDispatcher
@@ -89,7 +89,7 @@ class CharacterDetailsRepositoryTest {
             val networkElement = Mockito.mock(Character::class.java)
             val networkRepository = Mockito.mock(CharacterDetailsNetworkRepository::class.java)
             Mockito.`when`(networkRepository.getCharacter(networkElement.id)).thenReturn(Resource.Success(networkElement))
-            val listRepository = CharacterDetailsRepository(
+            val listRepository = CharacterDetailsRepositoryImpl(
                 emptyMemoryRepository,
                 networkRepository, IODispatcher = testDispatcher
             )
@@ -110,7 +110,7 @@ class CharacterDetailsRepositoryTest {
             Mockito.`when`(emptyMemoryRepository.get(anyInt()))
                 .thenReturn(Resource.Error(ResourceError.EmptyContent))
             val networkElement = Mockito.mock(Character::class.java)
-            val listRepository = CharacterDetailsRepository(
+            val listRepository = CharacterDetailsRepositoryImpl(
                 emptyMemoryRepository,
                 object : CharacterDetailsNetworkRepository {
                     override suspend fun getCharacter(id: Int): Resource<Character> {

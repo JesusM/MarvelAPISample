@@ -21,6 +21,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.palette.graphics.Palette
+import com.marvelsample.app.App
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
@@ -155,3 +156,5 @@ fun ProgressBar.changeAccentColor(@ColorInt color: Int) {
  */
 fun ViewModel.getViewModelScope(coroutineScope: CoroutineScope?) =
     coroutineScope ?: this.viewModelScope
+
+fun Context.asApp() = this.applicationContext as App

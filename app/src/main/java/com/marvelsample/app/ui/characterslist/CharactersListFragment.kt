@@ -70,6 +70,13 @@ class CharactersListFragment : Fragment() {
                 adapter.loadStateFlow.collectLatest { loadStates ->
                     Log.d("[CharacterList]", "Current paging state: $loadStates")
                     charactersListProgress.isVisible = loadStates.refresh is LoadState.Loading
+                    charactersListErrorMessage.apply {
+                        val isError = loadStates.refresh is LoadState.Error
+                        isVisible = isError
+                        if (isError) {
+                            text = (loadStates.refresh as LoadState.Error).error.message
+                        }
+                    }
                 }
             }
         }

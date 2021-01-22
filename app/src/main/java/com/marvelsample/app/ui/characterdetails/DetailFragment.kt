@@ -4,9 +4,11 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.transition.TransitionInflater
 import com.marvelsample.app.R
+import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.databinding.DetailScreenBinding
 import com.marvelsample.app.ui.base.model.Result
 import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
@@ -70,13 +72,17 @@ class DetailFragment : Fragment() {
         binding: DetailScreenBinding
     ) {
         binding.apply {
-            detailScreenProgress.visibility = View.GONE
+            detailScreenProgress.isVisible = false
+            detailScreenCharacterDescription.isVisible = true
+            detailScreenCharacterName.isVisible = true
+            detailScreenHeaderImage.isVisible = true
+
             detailScreenCharacterName.apply {
-                visibility = View.VISIBLE
+                isVisible = true
                 text = character.name
             }
             detailScreenCharacterDescription.apply {
-                visibility = View.VISIBLE
+                isVisible = true
                 text = character.description
             }
             character.image?.let {
@@ -113,8 +119,14 @@ class DetailFragment : Fragment() {
 
     private fun bindError(it: Result.Error, binding: DetailScreenBinding) {
         binding.apply {
-            detailScreenProgress.visibility = View.GONE
-            detailScreenCharacterName.text = it.error.toString()
+            detailScreenProgress.isVisible = false
+            detailScreenCharacterName.text = when (it.error) {
+                ResourceError.EmptyContent -> "No content"
+                is ResourceError.RequestFailError -> it.error.errorMessage
+                ResourceError.NoNetworkError -> "No network"
+            }
+            detailScreenHeaderImage.visibility = View.INVISIBLE
+            detailScreenCharacterDescription.visibility = View.INVISIBLE
         }
     }
 }
