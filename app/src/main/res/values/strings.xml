@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MarvelAPISample</string>
+
+    <string name="characters_list_label">Characters List</string>
 </resources>

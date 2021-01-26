@@ -17,7 +17,7 @@ class CharactersListViewModel(
     fun load(): Flow<PagingData<ListItem>> =
         Pager(
             config = PagingConfig(
-                initialLoadSize = 25,
+                initialLoadSize = 50,
                 pageSize = 25
             ),
             pagingSourceFactory = { charactersSource }

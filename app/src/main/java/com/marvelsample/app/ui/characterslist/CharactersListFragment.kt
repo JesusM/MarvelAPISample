@@ -1,20 +1,21 @@
 package com.marvelsample.app.ui.characterslist
 
-import android.app.ActivityOptions
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import android.util.Pair
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
+import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.FragmentNavigatorExtras
+import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.marvelsample.app.R
-import com.marvelsample.app.databinding.CharactersListActivityBinding
-import com.marvelsample.app.ui.characterdetails.DetailActivity
+import com.marvelsample.app.databinding.CharactersListScreenBinding
+import com.marvelsample.app.ui.characterdetails.DetailFragment
 import com.marvelsample.app.ui.characterslist.adapter.CharactersListAdapter
 import com.marvelsample.app.ui.characterslist.adapter.ListItemTaskDiffCallback
 import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
@@ -23,33 +24,38 @@ import kotlinx.coroutines.launch
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 
-class CharactersListActivity : AppCompatActivity() {
+class CharactersListFragment : Fragment() {
+
     private val viewModel: CharactersListViewModel by viewModel(named("charactersListViewModel"))
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        CharactersListActivityBinding.inflate(layoutInflater).apply {
-            setContentView(root)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return CharactersListScreenBinding.inflate(inflater, container, false).root
+    }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        CharactersListScreenBinding.bind(view).apply {
             val adapter = CharactersListAdapter(
-                CoilImageLoader(this@CharactersListActivity),
+                CoilImageLoader(requireContext()),
                 ListItemTaskDiffCallback()
             ) { item: ListItem, view: View ->
                 val thumb = view.findViewById<ImageView>(R.id.image)
                 val title = view.findViewById<TextView>(R.id.text)
+                val extras = FragmentNavigatorExtras(
+                    thumb to "thumb${item.id}",
+                    title to "title${item.id}"
+                )
 
-                val intent = Intent(this@CharactersListActivity, DetailActivity::class.java)
-                intent.putExtra(DetailActivity.ITEM_ID_ARG, item.id)
-                intent.putExtra(DetailActivity.ITEM_SHARE_THUMB_ARG, thumb.transitionName)
-                intent.putExtra(DetailActivity.ITEM_SHARE_TITLE_ARG, title.transitionName)
+                val args = Bundle().apply {
+                    putInt(DetailFragment.ITEM_ID_ARG, item.id)
+                }
 
-                val options: ActivityOptions = ActivityOptions
-                    .makeSceneTransitionAnimation(
-                        this@CharactersListActivity,
-                        Pair.create(thumb, thumb.transitionName),
-                        Pair.create(title, title.transitionName)
-                    )
-                startActivity(intent, options.toBundle())
+                findNavController().navigate(R.id.navigateToDetail, args, null, extras)
             }
 
             charactersList.adapter = adapter

@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.application'
     id 'kotlin-android'
+    id 'androidx.navigation.safeargs.kotlin'
 }
 
 android {
@@ -28,6 +29,9 @@ android {
         debug {
             buildConfigField("String", "MARVEL_API_KEY", getApiKey())
             buildConfigField("String", "MARVEL_PRIVATE_KEY", getPrivateApiKey())
+
+            applicationIdSuffix ".debug"
+            debuggable true
         }
     }
     compileOptions {
@@ -65,6 +69,11 @@ dependencies {
     implementation 'androidx.paging:paging-runtime-ktx:3.0.0-alpha12'
     implementation 'androidx.activity:activity-ktx:1.2.0-rc01'
     implementation 'androidx.palette:palette-ktx:1.0.0'
+
+    // Navigation
+    def androidXNavigationVersion = '2.3.2'
+    implementation 'androidx.navigation:navigation-fragment-ktx:' + androidXNavigationVersion
+    implementation 'androidx.navigation:navigation-ui-ktx:' + androidXNavigationVersion
 
     // Networking (retrofit + okhttp)
     def retrofitVersion = '2.9.0'

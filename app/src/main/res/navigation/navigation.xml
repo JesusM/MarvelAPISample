@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation"
+    app:startDestination="@id/charactersFragment">
+
+    <fragment
+        android:id="@+id/charactersFragment"
+        android:name="com.marvelsample.app.ui.characterslist.CharactersListFragment"
+        android:label="@string/characters_list_label"
+        tools:layout="@layout/characters_list_screen">
+        <action
+            android:id="@+id/navigateToDetail"
+            app:destination="@id/detailsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/detailsFragment"
+        android:name="com.marvelsample.app.ui.characterdetails.DetailFragment"
+        android:label=""
+        tools:layout="@layout/detail_screen">
+        <argument
+            android:name="ITEM_ID_ARG"
+            android:defaultValue="-1"
+            app:argType="integer" />
+        <argument
+            android:name="ITEM_SHARE_THUMB_ARG"
+            app:argType="string" />
+        <argument
+            android:name="ITEM_SHARE_TITLE_ARG"
+            app:argType="string" />
+    </fragment>
+</navigation>

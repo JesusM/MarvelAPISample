@@ -1,10 +1,13 @@
 package com.marvelsample.app.ui.characterdetails
 
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import androidx.appcompat.app.AppCompatActivity
+import android.view.ViewGroup
+import androidx.fragment.app.Fragment
+import androidx.transition.TransitionInflater
 import com.marvelsample.app.R
-import com.marvelsample.app.databinding.DetailActivityBinding
+import com.marvelsample.app.databinding.DetailScreenBinding
 import com.marvelsample.app.ui.base.model.Result
 import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
 import com.marvelsample.app.ui.utils.imageloader.loadImageAfterMeasure
@@ -13,22 +16,36 @@ import com.marvelsample.app.ui.utils.textPaletteAsync
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 
-class DetailActivity : AppCompatActivity() {
+class DetailFragment : Fragment() {
+
     companion object {
         const val ITEM_ID_ARG: String = "ITEM_ID_ARG"
-        const val ITEM_SHARE_THUMB_ARG: String = "ITEM_SHARE_THUMB_ARG"
-        const val ITEM_SHARE_TITLE_ARG: String = "ITEM_SHARE_TITLE_ARG"
     }
 
     private val viewModel: DetailViewModel by viewModel(named("detailViewModel"))
 
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        return DetailScreenBinding.inflate(inflater, container, false).root
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        sharedElementEnterTransition =
+            TransitionInflater.from(context).inflateTransition(android.R.transition.move)
+    }
 
-        DetailActivityBinding.inflate(layoutInflater).apply {
-            setContentView(root)
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-            viewModel.itemObservable.observe(this@DetailActivity, {
+        DetailScreenBinding.bind(view).apply {
+            val itemId = arguments?.getInt(ITEM_ID_ARG) ?: -1
+            detailScreenHeaderImage.transitionName = "thumb$itemId"
+            detailScreenCharacterName.transitionName = "title$itemId"
+            viewModel.itemObservable.observe(viewLifecycleOwner, {
                 when (it) {
                     is Result.Error -> {
                         bindError(it, this)
@@ -37,34 +54,34 @@ class DetailActivity : AppCompatActivity() {
                         bindItem(it.result, this)
                     }
                     Result.Loading -> {
-                        detailActivityProgress.visibility = View.VISIBLE
+                        detailScreenProgress.visibility = View.VISIBLE
                     }
                 }
             })
-            postponeEnterTransition()
-            detailActivityHeaderImage.transitionName = intent.getStringExtra(ITEM_SHARE_THUMB_ARG)
-            detailActivityCharacterName.transitionName = intent.getStringExtra(ITEM_SHARE_TITLE_ARG)
-            viewModel.load(intent.getIntExtra(ITEM_ID_ARG, -1))
+            arguments?.let {
+                postponeEnterTransition()
+                viewModel.load(itemId)
+            }
         }
     }
 
     private fun bindItem(
         character: CharacterModel,
-        binding: DetailActivityBinding
+        binding: DetailScreenBinding
     ) {
         binding.apply {
-            detailActivityProgress.visibility = View.GONE
-            detailActivityCharacterName.apply {
+            detailScreenProgress.visibility = View.GONE
+            detailScreenCharacterName.apply {
                 visibility = View.VISIBLE
                 text = character.name
             }
-            detailActivityCharacterDescription.apply {
+            detailScreenCharacterDescription.apply {
                 visibility = View.VISIBLE
                 text = character.description
             }
             character.image?.let {
-                detailActivityHeaderImage.loadImageAfterMeasure(
-                    CoilImageLoader(this@DetailActivity),
+                detailScreenHeaderImage.loadImageAfterMeasure(
+                    CoilImageLoader(requireContext()),
                     character.image,
                     null,
                     { bitmap ->
@@ -79,11 +96,11 @@ class DetailActivity : AppCompatActivity() {
 
                                 // Once the palette is fetched, use its "text palette" for UI elements.
                                 val backgroundColor = textSwatch?.background
-                                    ?: detailActivityHeaderImage.context.getColor(R.color.backgroundLight)
+                                    ?: detailScreenHeaderImage.context.getColor(R.color.backgroundLight)
                                 val textColor = textSwatch?.primaryText
-                                    ?: detailActivityHeaderImage.context.getColor(R.color.primaryTextColor)
+                                    ?: detailScreenHeaderImage.context.getColor(R.color.primaryTextColor)
 
-                                detailActivityCharacterName.apply {
+                                detailScreenCharacterName.apply {
                                     setBackgroundColor(backgroundColor)
                                     setTextColor(textColor)
                                 }
@@ -94,10 +111,10 @@ class DetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun bindError(it: Result.Error, binding: DetailActivityBinding) {
+    private fun bindError(it: Result.Error, binding: DetailScreenBinding) {
         binding.apply {
-            detailActivityProgress.visibility = View.GONE
-            detailActivityCharacterName.text = it.error.toString()
+            detailScreenProgress.visibility = View.GONE
+            detailScreenCharacterName.text = it.error.toString()
         }
     }
 }
