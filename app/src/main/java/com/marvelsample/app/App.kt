@@ -3,11 +3,10 @@ package com.marvelsample.app
 import android.app.Application
 import androidx.appcompat.app.AppCompatDelegate
 import com.marvelsample.app.di.*
-import org.kodein.di.DI
-import org.kodein.di.DIAware
-import org.kodein.di.android.x.androidXModule
+import org.koin.android.ext.koin.androidContext
+import org.koin.core.context.startKoin
 
-class App : Application(), DIAware {
+class App : Application() {
 
     companion object {
         init {
@@ -15,12 +14,13 @@ class App : Application(), DIAware {
         }
     }
 
-    override val di by DI.lazy {
-        import(androidXModule(this@App))
-        import(appModule)
-        import(networkModule)
-        import(repositoryModule)
-        import(systemModule)
-        import(userCases)
+    override fun onCreate() {
+        super.onCreate()
+
+        startKoin {
+            androidContext(this@App)
+
+            modules(appModule, networkModule, repositoryModule, userCases, systemModule, viewModels)
+        }
     }
 }

@@ -77,8 +77,10 @@ dependencies {
     // Image render library (Coil)
     implementation 'io.coil-kt:coil:1.1.0'
 
-    // Dependency injection (Kodein)
-    implementation 'org.kodein.di:kodein-di-framework-android-x:7.1.0'
+    // Koin (DI library)
+    def koinVersion = "2.2.0"
+    implementation "org.koin:koin-android:$koinVersion"
+    implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
 
     // Testing
     testImplementation 'junit:junit:4.13.1'

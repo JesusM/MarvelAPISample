@@ -8,12 +8,8 @@ import android.util.Pair
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.isVisible
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import com.marvelsample.app.R
@@ -24,41 +20,11 @@ import com.marvelsample.app.ui.characterslist.adapter.ListItemTaskDiffCallback
 import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
-import org.kodein.di.*
-import org.kodein.di.android.closestDI
-import org.kodein.di.android.retainedDI
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
-class CharactersListActivity : AppCompatActivity(), DIAware {
-
-    private val activityModule = DI.Module("itemDetail") {
-        bind("charactersListViewModelFactory") from factory { activity: CharactersListActivity ->
-            val viewModelFactory = object : AbstractSavedStateViewModelFactory(activity, null) {
-                override fun <T : ViewModel?> create(
-                    key: String,
-                    modelClass: Class<T>,
-                    handle: SavedStateHandle
-                ): T {
-                    return CharactersListViewModel(instance()) as T
-                }
-
-            }
-            viewModelFactory
-        }
-    }
-
-    private val _parentKodein by closestDI()
-    override val di by retainedDI {
-        extend(_parentKodein)
-        import(activityModule)
-    }
-
-    private val viewModelFactory: AbstractSavedStateViewModelFactory by instance(
-        "charactersListViewModelFactory",
-        arg = this
-    )
-    private val viewModel: CharactersListViewModel by viewModels {
-        viewModelFactory
-    }
+class CharactersListActivity : AppCompatActivity() {
+    private val viewModel: CharactersListViewModel by viewModel(named("charactersListViewModel"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -97,8 +63,7 @@ class CharactersListActivity : AppCompatActivity(), DIAware {
             lifecycleScope.launch {
                 adapter.loadStateFlow.collectLatest { loadStates ->
                     Log.d("[CharacterList]", "Current paging state: $loadStates")
-                    charactersListProgress.isVisible =
-                        loadStates.refresh is LoadState.Loading
+                    charactersListProgress.isVisible = loadStates.refresh is LoadState.Loading
                 }
             }
         }

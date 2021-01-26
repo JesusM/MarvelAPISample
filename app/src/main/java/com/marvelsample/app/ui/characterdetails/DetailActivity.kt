@@ -2,11 +2,7 @@ package com.marvelsample.app.ui.characterdetails
 
 import android.os.Bundle
 import android.view.View
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.AbstractSavedStateViewModelFactory
-import androidx.lifecycle.SavedStateHandle
-import androidx.lifecycle.ViewModel
 import com.marvelsample.app.R
 import com.marvelsample.app.databinding.DetailActivityBinding
 import com.marvelsample.app.ui.base.model.Result
@@ -14,47 +10,17 @@ import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
 import com.marvelsample.app.ui.utils.imageloader.loadImageAfterMeasure
 import com.marvelsample.app.ui.utils.launchUI
 import com.marvelsample.app.ui.utils.textPaletteAsync
-import org.kodein.di.*
-import org.kodein.di.android.closestDI
-import org.kodein.di.android.retainedDI
+import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.qualifier.named
 
-class DetailActivity : AppCompatActivity(), DIAware {
-
-    private val activityModule = DI.Module("itemDetail") {
-        bind("itemDetailViewModelFactory") from factory { activity: DetailActivity ->
-            val viewModelFactory = object : AbstractSavedStateViewModelFactory(activity, null) {
-                override fun <T : ViewModel?> create(
-                    key: String,
-                    modelClass: Class<T>,
-                    handle: SavedStateHandle
-                ): T {
-                    return DetailViewModel(useCase = instance()) as T
-                }
-
-            }
-            viewModelFactory
-        }
-    }
-
-    private val _parentKodein by closestDI()
-    override val di by retainedDI {
-        extend(_parentKodein)
-        import(activityModule)
-    }
-
+class DetailActivity : AppCompatActivity() {
     companion object {
         const val ITEM_ID_ARG: String = "ITEM_ID_ARG"
         const val ITEM_SHARE_THUMB_ARG: String = "ITEM_SHARE_THUMB_ARG"
         const val ITEM_SHARE_TITLE_ARG: String = "ITEM_SHARE_TITLE_ARG"
     }
 
-    private val viewModelFactory: AbstractSavedStateViewModelFactory by instance(
-        "itemDetailViewModelFactory",
-        arg = this
-    )
-    private val viewModel: DetailViewModel by viewModels {
-        viewModelFactory
-    }
+    private val viewModel: DetailViewModel by viewModel(named("detailViewModel"))
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
