@@ -8,7 +8,7 @@ import com.marvelsample.app.core.model.Thumbnail
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCase
-import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepositoryImpl
+import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
 import com.marvelsample.app.ui.base.model.Result
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -51,7 +51,7 @@ class DetailViewModelTest {
 
     @Test
     fun `view model request posts loading state first`() = runBlockingTest {
-        val mock = mock(CharacterDetailsRepositoryImpl::class.java)
+        val mock = mock(CharacterDetailsRepository::class.java)
         viewModel = DetailViewModel(
             CharacterDetailsUseCase(mock),
             dispatcher = testCoroutineDispatcher
@@ -82,7 +82,7 @@ class DetailViewModelTest {
         )
         val repositoryCharacter = CharacterModel(expectedName, "", null)
 
-        val mockRepository = mock(CharacterDetailsRepositoryImpl::class.java)
+        val mockRepository = mock(CharacterDetailsRepository::class.java)
         Mockito.`when`(mockRepository.getItem(anyInt())).thenReturn(Resource.Success(element))
         viewModel = DetailViewModel(
             CharacterDetailsUseCase(mockRepository),
@@ -99,7 +99,7 @@ class DetailViewModelTest {
 
     @Test
     fun `view model posts correct error state`() = runBlockingTest {
-        val mockRepository = mock(CharacterDetailsRepositoryImpl::class.java)
+        val mockRepository = mock(CharacterDetailsRepository::class.java)
         val expectedError = ResourceError.EmptyContent
         Mockito.`when`(mockRepository.getItem(anyInt()))
             .thenReturn(Resource.Error(expectedError))

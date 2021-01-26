@@ -9,6 +9,7 @@ import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
 import com.marvelsample.app.core.repository.memory.PagedCollectionMemoryRepository
 import com.marvelsample.app.core.usecases.characterslist.repository.CharactersListRepositoryImpl
 import com.marvelsample.app.core.usecases.characterslist.repository.network.CharacterListNetworkRepository
+import com.marvelsample.app.createFakeCharacter
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -64,7 +65,8 @@ class CharactersListRepositoryTest {
     fun `should correctly return memory content first`() =
         mainCoroutineRule.runBlockingTest {
             val memoryRepository = PagedCollectionMemoryRepository<Character>()
-            val memoryElement = Mockito.mock(Character::class.java)
+            val expectedId = 0
+            val memoryElement = createFakeCharacter(expectedId)
             memoryRepository.add(listOf(memoryElement))
             val listRepository =
                 CharactersListRepositoryImpl(
@@ -76,14 +78,15 @@ class CharactersListRepositoryTest {
 
             assert(content is Resource.Success)
             assertEquals((content as Resource.Success).result.count, 1)
-            assertEquals(content.result.results.first().id, memoryElement.id)
+            assertEquals(expectedId, content.result.results.first().id)
         }
 
     @Test
     fun `should correctly return list from network if memory repository is empty`() =
         mainCoroutineRule.runBlockingTest {
             val emptyMemoryRepository = PagedCollectionMemoryRepository<Character>()
-            val networkElement = Mockito.mock(Character::class.java)
+            val expectedId = 0
+            val networkElement = createFakeCharacter(expectedId)
             val networkRepository = Mockito.mock(CharacterListNetworkRepository::class.java)
             val collectionQuery = CollectionRequestParams()
             Mockito.`when`(networkRepository.getCharacters(collectionQuery))
@@ -101,7 +104,7 @@ class CharactersListRepositoryTest {
 
             assert(content is Resource.Success)
             assertEquals((content as Resource.Success).result.count, 1)
-            assertEquals(content.result.results.first().id, networkElement.id)
+            assertEquals(expectedId, content.result.results.first().id)
         }
 
     @Test
@@ -111,7 +114,8 @@ class CharactersListRepositoryTest {
                 Mockito.mock(PagedCollectionMemoryRepository::class.java) as PagedCollectionMemoryRepository<Character>
             Mockito.`when`(emptyMemoryRepository.getPage())
                 .thenReturn(Resource.Error(ResourceError.EmptyContent))
-            val networkElement = Mockito.mock(Character::class.java)
+            val expectedId = 0
+            val networkElement = createFakeCharacter(expectedId)
             val newElements = listOf(networkElement)
             val listRepository = CharactersListRepositoryImpl(
                 emptyMemoryRepository,
@@ -155,7 +159,7 @@ class CharactersListRepositoryTest {
     private fun createNItems(count: Int): List<Character> {
         val result = mutableListOf<Character>()
         for (i in 0 until count) {
-            result.add(Mockito.mock(Character::class.java))
+            result.add(createFakeCharacter(i))
         }
 
         return result

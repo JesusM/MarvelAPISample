@@ -11,6 +11,7 @@ import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.model.fullPath
 import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
 import com.marvelsample.app.core.usecases.characterslist.CharactersListUseCase
+import com.marvelsample.app.core.usecases.characterslist.repository.CharactersListRepository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.TestCoroutineDispatcher
@@ -43,12 +44,12 @@ class CharactersSourceTest {
 
     @Test
     fun `return load result error if empty content`() = runBlockingTest {
-        val charactersListUseCase = Mockito.mock(CharactersListUseCase::class.java)
+        val charactersListRepository = Mockito.mock(CharactersListRepository::class.java)
         val expectedError = ResourceError.EmptyContent
         val collectionQuery = CollectionRequestParams(0, 20)
-        Mockito.`when`(charactersListUseCase.getCharacters(collectionQuery))
+        Mockito.`when`(charactersListRepository.getContent(collectionQuery))
             .thenReturn(Resource.Error(expectedError))
-        val charactersSource = CharactersSource(charactersListUseCase)
+        val charactersSource = CharactersSource(CharactersListUseCase(charactersListRepository))
         val load = charactersSource.load(
             PagingSource.LoadParams.Refresh(
                 collectionQuery.offset,
@@ -61,7 +62,7 @@ class CharactersSourceTest {
 
     @Test
     fun `return correct content`() = runBlockingTest {
-        val charactersListUseCase = Mockito.mock(CharactersListUseCase::class.java)
+        val charactersListRepository = Mockito.mock(CharactersListRepository::class.java)
         val expectedContent: MutableList<ListItem> = mutableListOf()
         val repositoryContent: MutableList<Character> = mutableListOf()
         val expectedId = 1
@@ -83,9 +84,9 @@ class CharactersSourceTest {
         )
         expectedContent.add(ListItem(element.id, element.name, element.thumbnail.fullPath()))
         val params = CollectionRequestParams(0, 20)
-        Mockito.`when`(charactersListUseCase.getCharacters(params))
+        Mockito.`when`(charactersListRepository.getContent(params))
             .thenReturn(Resource.Success(Pager(repositoryContent)))
-        val load = CharactersSource(charactersListUseCase).load(
+        val load = CharactersSource(CharactersListUseCase(charactersListRepository)).load(
             PagingSource.LoadParams.Refresh(
                 params.offset,
                 params.limit,

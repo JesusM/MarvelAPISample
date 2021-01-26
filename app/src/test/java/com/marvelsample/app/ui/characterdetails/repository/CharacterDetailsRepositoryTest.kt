@@ -4,9 +4,10 @@ import com.marvelsample.app.core.model.Character
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.repository.base.MainCoroutineRule
-import com.marvelsample.app.core.repository.memory.ItemMemoryRepository
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepositoryImpl
+import com.marvelsample.app.core.usecases.characterdetails.repository.memory.CharacterDetailMemoryRepository
 import com.marvelsample.app.core.usecases.characterdetails.repository.network.CharacterDetailsNetworkRepository
+import com.marvelsample.app.createFakeCharacter
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,7 +47,11 @@ class CharacterDetailsRepositoryTest {
     @Test
     fun `should correctly return empty state if repositories don't have content`() =
         mainCoroutineRule.runBlockingTest {
-            val emptyMemoryRepository = ItemMemoryRepository<Int, Character>()
+            val emptyMemoryRepository =
+                Mockito.mock(CharacterDetailMemoryRepository::class.java)
+            Mockito.`when`(emptyMemoryRepository.getItem(anyInt()))
+                .thenReturn(Resource.Error(ResourceError.EmptyContent))
+
             val emptyNetworkRepository = EmptyNetworkRepository()
             val repository =
                 CharacterDetailsRepositoryImpl(
@@ -55,7 +60,7 @@ class CharacterDetailsRepositoryTest {
                     IODispatcher = testDispatcher
                 )
             val content = repository.getItem(0)
-            
+
             assert(content is Resource.Error)
             assert((content as Resource.Error).error is ResourceError.EmptyContent)
         }
@@ -64,10 +69,11 @@ class CharacterDetailsRepositoryTest {
     fun `should correctly return memory item if available`() =
         mainCoroutineRule.runBlockingTest {
             val memoryRepository =
-                Mockito.mock(ItemMemoryRepository::class.java) as ItemMemoryRepository<Int, Character>
-            val memoryElement = Mockito.mock(Character::class.java)
+                Mockito.mock(CharacterDetailMemoryRepository::class.java)
             val expectedItemId = 0
-            Mockito.`when`(memoryRepository.get(anyInt())).thenReturn(Resource.Success(memoryElement))
+            val memoryElement = createFakeCharacter(expectedItemId)
+            Mockito.`when`(memoryRepository.getItem(anyInt()))
+                .thenReturn(Resource.Success(memoryElement))
             val repository =
                 CharacterDetailsRepositoryImpl(
                     memoryRepository,
@@ -75,9 +81,9 @@ class CharacterDetailsRepositoryTest {
                     IODispatcher = testDispatcher
                 )
             val content = repository.getItem(expectedItemId)
-            
-            verify(memoryRepository).get(expectedItemId)
-            
+
+            verify(memoryRepository).getItem(expectedItemId)
+
             assert(content is Resource.Success)
             assertEquals((content as Resource.Success).result.id, memoryElement.id)
         }
@@ -85,16 +91,21 @@ class CharacterDetailsRepositoryTest {
     @Test
     fun `should correctly return item from network if memory repository is empty`() =
         mainCoroutineRule.runBlockingTest {
-            val emptyMemoryRepository = ItemMemoryRepository<Int, Character>()
-            val networkElement = Mockito.mock(Character::class.java)
+            val networkElement = createFakeCharacter(1)
             val networkRepository = Mockito.mock(CharacterDetailsNetworkRepository::class.java)
-            Mockito.`when`(networkRepository.getCharacter(networkElement.id)).thenReturn(Resource.Success(networkElement))
-            val listRepository = CharacterDetailsRepositoryImpl(
-                emptyMemoryRepository,
+            Mockito.`when`(networkRepository.getCharacter(networkElement.id))
+                .thenReturn(Resource.Success(networkElement))
+
+            val memoryRepository = Mockito.mock(CharacterDetailMemoryRepository::class.java)
+            Mockito.`when`(memoryRepository.getItem(networkElement.id))
+                .thenReturn(Resource.Error(ResourceError.EmptyContent))
+
+            val detailRepository = CharacterDetailsRepositoryImpl(
+                memoryRepository,
                 networkRepository, IODispatcher = testDispatcher
             )
 
-            val content = listRepository.getItem(networkElement.id)
+            val content = detailRepository.getItem(networkElement.id)
 
             verify(networkRepository).getCharacter(networkElement.id)
 
@@ -105,11 +116,12 @@ class CharacterDetailsRepositoryTest {
     @Test
     fun `item from network is correctly added to memory repository`() =
         mainCoroutineRule.runBlockingTest {
+            val expectedElementId = 0
             val emptyMemoryRepository =
-                Mockito.mock(ItemMemoryRepository::class.java) as ItemMemoryRepository<Int, Character>
-            Mockito.`when`(emptyMemoryRepository.get(anyInt()))
+                Mockito.mock(CharacterDetailMemoryRepository::class.java)
+            Mockito.`when`(emptyMemoryRepository.getItem(anyInt()))
                 .thenReturn(Resource.Error(ResourceError.EmptyContent))
-            val networkElement = Mockito.mock(Character::class.java)
+            val networkElement = createFakeCharacter(expectedElementId)
             val listRepository = CharacterDetailsRepositoryImpl(
                 emptyMemoryRepository,
                 object : CharacterDetailsNetworkRepository {
@@ -120,7 +132,7 @@ class CharacterDetailsRepositoryTest {
             )
             listRepository.getItem(anyInt())
 
-            verify(emptyMemoryRepository).add(networkElement.id, networkElement)
+            verify(emptyMemoryRepository).addItem(networkElement)
         }
 
 
