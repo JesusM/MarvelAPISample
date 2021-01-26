@@ -62,10 +62,12 @@ class DetailFragmentTest {
     @Test
     fun shouldDisplayContent() {
         val expectedId = 1
+        val expectedName = "name"
+        val expectedDescription = "description"
         val element = Character(
             expectedId,
-            "name",
-            "description",
+            expectedName,
+            expectedDescription,
             Thumbnail("jpg", "a"),
             createEmptyExternalCollection(),
             createEmptyExternalCollection(),
@@ -83,10 +85,13 @@ class DetailFragmentTest {
         })
 
         onView(withId(R.id.detail_screen_progress)).check(matches(not(isDisplayed())))
+
         onView(withId(R.id.detail_screen_character_description)).check(matches(isDisplayed()))
-        onView(withId(R.id.detail_screen_character_description)).check(matches(withText("description")))
+        onView(withId(R.id.detail_screen_character_description)).check(matches(withText(expectedDescription)))
+
         onView(withId(R.id.detail_screen_character_name)).check(matches(isDisplayed()))
-        onView(withId(R.id.detail_screen_character_name)).check(matches(withText("name")))
+        onView(withId(R.id.detail_screen_character_name)).check(matches(withText(expectedName)))
+
         onView(withId(R.id.detail_screen_header_image)).check(matches(isDisplayed()))
     }
 
@@ -100,9 +105,12 @@ class DetailFragmentTest {
         })
 
         onView(withId(R.id.detail_screen_progress)).check(matches(not(isDisplayed())))
+
         onView(withId(R.id.detail_screen_header_image)).check(matches(not(isDisplayed())))
+
         onView(withId(R.id.detail_screen_character_name)).check(matches(isDisplayed()))
         onView(withId(R.id.detail_screen_character_name)).check(matches(withText(errorMessage)))
+
         onView(withId(R.id.detail_screen_character_description)).check(matches(not(isDisplayed())))
     }
 
