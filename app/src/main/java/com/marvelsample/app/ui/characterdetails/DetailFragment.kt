@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
 import com.marvelsample.app.R
 import com.marvelsample.app.core.model.base.error.ResourceError
@@ -19,10 +20,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.qualifier.named
 
 class DetailFragment : Fragment() {
-
-    companion object {
-        const val ITEM_ID_ARG: String = "ITEM_ID_ARG"
-    }
+    private val args: DetailFragmentArgs by navArgs()
 
     private val viewModel: DetailViewModel by viewModel(named("detailViewModel"))
 
@@ -44,7 +42,7 @@ class DetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         DetailScreenBinding.bind(view).apply {
-            val itemId = arguments?.getInt(ITEM_ID_ARG) ?: -1
+            val itemId = args.itemId
             detailScreenHeaderImage.transitionName = "thumb$itemId"
             detailScreenCharacterName.transitionName = "title$itemId"
             viewModel.itemObservable.observe(viewLifecycleOwner, {

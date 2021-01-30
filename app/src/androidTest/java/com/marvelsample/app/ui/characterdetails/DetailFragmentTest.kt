@@ -12,7 +12,6 @@ import com.marvelsample.app.core.model.Thumbnail
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
-import com.marvelsample.app.ui.characterdetails.DetailFragment.Companion.ITEM_ID_ARG
 import com.marvelsample.app.ui.createEmptyExternalCollection
 import org.hamcrest.Matchers.not
 import org.junit.After
@@ -81,7 +80,7 @@ class DetailFragmentTest {
         fakeRepository.result = Resource.Success(element)
 
         launch(Bundle().apply {
-            putInt(ITEM_ID_ARG, expectedId)
+            putInt("itemId", expectedId)
         })
 
         onView(withId(R.id.detail_screen_progress)).check(matches(not(isDisplayed())))
@@ -101,7 +100,7 @@ class DetailFragmentTest {
         fakeRepository.result = Resource.Error(ResourceError.RequestFailError(errorMessage))
 
         launch(Bundle().apply {
-            putInt(ITEM_ID_ARG, 1)
+            putInt("itemId", 1)
         })
 
         onView(withId(R.id.detail_screen_progress)).check(matches(not(isDisplayed())))

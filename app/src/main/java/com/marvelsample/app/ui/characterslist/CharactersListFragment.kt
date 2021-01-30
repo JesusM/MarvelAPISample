@@ -15,7 +15,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.paging.LoadState
 import com.marvelsample.app.R
 import com.marvelsample.app.databinding.CharactersListScreenBinding
-import com.marvelsample.app.ui.characterdetails.DetailFragment
 import com.marvelsample.app.ui.characterslist.adapter.CharactersListAdapter
 import com.marvelsample.app.ui.characterslist.adapter.ListItemTaskDiffCallback
 import com.marvelsample.app.ui.utils.imageloader.CoilImageLoader
@@ -52,7 +51,7 @@ class CharactersListFragment : Fragment() {
                 )
 
                 val args = Bundle().apply {
-                    putInt(DetailFragment.ITEM_ID_ARG, item.id)
+                    putInt("itemId", item.id)
                 }
 
                 findNavController().navigate(R.id.navigateToDetail, args, null, extras)
