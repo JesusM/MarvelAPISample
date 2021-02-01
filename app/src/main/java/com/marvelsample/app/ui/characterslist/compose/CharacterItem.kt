@@ -7,6 +7,8 @@ import androidx.compose.material.Card
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
 import com.marvelsample.app.ui.characterslist.ListItem
 
@@ -16,6 +18,9 @@ fun CharacterListItem(character: ListItem, onClick: (Int) -> Unit) {
         shape = RoundedCornerShape(3.dp),
         elevation = 6.dp,
         modifier = Modifier
+            .clearAndSetSemantics {
+                contentDescription = "Character ${character.name} card."
+            }
             .clickable(onClick = {
                 onClick(character.id)
             })

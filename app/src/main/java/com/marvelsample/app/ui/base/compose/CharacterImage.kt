@@ -15,8 +15,9 @@ import dev.chrisbanes.accompanist.coil.CoilImage
 @Composable
 fun CharacterImage(
     imageUrl: String?,
-    characterName : String,
-    modifier: Modifier = Modifier
+    characterName: String,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null
 ) {
     CoilImage(
         data = imageUrl ?: R.drawable.ic_baseline_face_24,
@@ -31,9 +32,9 @@ fun CharacterImage(
         error = {
             Image(
                 imageVector = vectorResource(R.drawable.ic_baseline_face_24),
-                contentDescription = "Character $characterName error image."
+                contentDescription = contentDescription ?: "Character $characterName error image."
             )
         },
-        contentDescription = "Character $characterName image."
+        contentDescription = contentDescription ?: "Character $characterName image."
     )
 }

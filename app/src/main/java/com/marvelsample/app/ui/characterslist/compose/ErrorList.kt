@@ -7,12 +7,14 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.paging.LoadState
 
 @Composable
 fun ErrorList(modifier: Modifier, error: LoadState.Error) {
     Column(
-        modifier = modifier,
+        modifier = modifier.semantics { contentDescription = "List Error" },
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

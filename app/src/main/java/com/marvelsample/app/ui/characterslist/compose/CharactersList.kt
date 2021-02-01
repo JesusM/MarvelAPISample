@@ -4,6 +4,8 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.paging.LoadState
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
@@ -23,7 +25,9 @@ fun CharactersList(
 
     LazyPagingGridFor(
         items = lazyCharacters,
-        modifier = modifier,
+        modifier = modifier.semantics {
+            contentDescription = "Characters list"
+        },
         itemContent = { _: Int, item: ListItem ->
             CharacterListItem(
                 character = item,
@@ -36,25 +40,18 @@ fun CharactersList(
             lazyCharacters.apply {
                 when {
                     loadState.refresh is LoadState.Loading -> {
-                        Loading(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight()
-                        )
+                        Loading(modifier = Modifier)
                     }
                     loadState.append is LoadState.Loading -> {
-                        Loading(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight()
-                        )
+                        Loading(modifier = Modifier)
                     }
                     loadState.refresh is LoadState.Error -> {
                         val error = lazyCharacters.loadState.refresh as LoadState.Error
                         ErrorList(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .fillMaxHeight(), error = error
+                                .fillMaxHeight(),
+                            error = error
                         )
                     }
                     loadState.append is LoadState.Error -> {
@@ -62,7 +59,8 @@ fun CharactersList(
                         ErrorList(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .fillMaxHeight(), error = error
+                                .fillMaxHeight(),
+                            error = error
                         )
                     }
                 }
