@@ -15,3 +15,7 @@ MARVEL_PUBLIC_KEY="yourPublicKey"
 <img src="art/screenshot_list.png" width="350">
 <img src="art/transition.gif" width="350">
 <img src="art/screenshot_detail.png" width="350">
+
+# Branches
+ - main: meant to be the "production ready" code.
+ - compose: integrating [Jetpack Compose](https://developer.android.com/jetpack/compose).
