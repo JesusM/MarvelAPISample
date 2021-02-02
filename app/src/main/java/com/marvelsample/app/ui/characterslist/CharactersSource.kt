@@ -1,6 +1,7 @@
 package com.marvelsample.app.ui.characterslist
 
 import androidx.paging.PagingSource
+import androidx.paging.PagingState
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.model.fullPath
@@ -44,5 +45,9 @@ class CharactersSource(private val charactersListUseCase: CharactersListUseCase)
                 }, prevKey, nextKey)
             }
         }
+    }
+
+    override fun getRefreshKey(state: PagingState<Int, ListItem>): Int? {
+        return state.anchorPosition
     }
 }
