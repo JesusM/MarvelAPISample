@@ -21,7 +21,7 @@ class HostActivityTest {
         ActivityScenarioRule(HostActivity::class.java)
 
     @Test
-    fun shouldInitiallyNavigateToFlightsFragment() {
+    fun shouldInitiallyNavigateToCharactersListFragment() {
         // Create a TestNavHostController
         val navController = TestNavHostController(
             ApplicationProvider.getApplicationContext()
