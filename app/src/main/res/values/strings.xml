@@ -3,6 +3,7 @@
 
     <string name="characters_list_label">Characters List</string>
     <string name="characters_list_error_message">Error</string>
+    <string name="label_back">Back</string>
 
     <string name="comics">Comics</string>
 </resources>

@@ -6,7 +6,7 @@ import androidx.compose.runtime.Composable
 import com.marvelsample.app.ui.base.compose.MainTheme
 
 @Composable
-fun ThemedScaffold(children: @Composable () -> Unit) {
+fun DetailScaffold(children: @Composable () -> Unit) {
     MainTheme {
         Surface(color = MaterialTheme.colors.surface) {
             children()

@@ -20,8 +20,14 @@ import com.marvelsample.app.ui.characterdetails.CharacterModel
 import com.marvelsample.app.ui.characterslist.compose.CharacterImage
 
 @Composable
-fun CharacterDetailCard(characterResult: Result<CharacterModel>, modifier: Modifier) {
-    Surface(modifier = Modifier.fillMaxWidth()) {
+fun CharacterDetailCard(
+    characterResult: Result<CharacterModel>,
+    modifier: Modifier = Modifier,
+    upPress: () -> Unit = {}
+) {
+    Surface(modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight()) {
         when (characterResult) {
             Result.Loading -> {
                 Loading(modifier = modifier)
@@ -53,17 +59,23 @@ fun CharacterDetailCard(characterResult: Result<CharacterModel>, modifier: Modif
             }
             is Result.Success -> {
                 val character = characterResult.result
-                Column {
-                    CharacterImage(
-                        imageUrl = character.image,
-                        characterName = character.name,
-                        modifier = Modifier.height(dimensionResource(R.dimen.collection_item_detail_height)),
-                        contentDescription = "Character detail image"
-                    )
+                Box(modifier = modifier) {
                     Column(modifier = modifier) {
-                        Text(character.name, style = MaterialTheme.typography.h4)
-                        Text(character.description ?: "", style = MaterialTheme.typography.body1)
+                        CharacterImage(
+                            imageUrl = character.image,
+                            characterName = character.name,
+                            modifier = Modifier.height(dimensionResource(R.dimen.collection_item_detail_height)),
+                            contentDescription = "Character detail image"
+                        )
+                        Column(modifier = modifier.padding(16.dp)) {
+                            Text(character.name, style = MaterialTheme.typography.h4)
+                            Text(
+                                character.description ?: "",
+                                style = MaterialTheme.typography.body1
+                            )
+                        }
                     }
+                    Up(upPress)
                 }
             }
         }
@@ -78,5 +90,5 @@ fun DefaultCharacterCard() {
         "3-D Man Description",
         "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784.jpg"
     )
-    CharacterDetailCard(Result.Success(character), Modifier.padding(16.dp))
+    CharacterDetailCard(Result.Success(character))
 }

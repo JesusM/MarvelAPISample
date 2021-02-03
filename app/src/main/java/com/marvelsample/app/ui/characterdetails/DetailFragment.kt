@@ -4,19 +4,18 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.compose.foundation.layout.padding
+import androidx.compose.animation.Crossfade
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import androidx.transition.TransitionInflater
 import com.marvelsample.app.databinding.DetailScreenBinding
 import com.marvelsample.app.ui.base.model.Result
 import com.marvelsample.app.ui.characterdetails.compose.CharacterDetailCard
-import com.marvelsample.app.ui.characterdetails.compose.ThemedScaffold
+import com.marvelsample.app.ui.characterdetails.compose.DetailScaffold
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -55,11 +54,12 @@ class DetailFragment : Fragment() {
 
     @Composable
     fun Bind(characterResult: Result<CharacterModel>) {
-        ThemedScaffold {
-            CharacterDetailCard(
-                characterResult = characterResult,
-                modifier = Modifier.padding(16.dp)
-            )
+        Crossfade(current = findNavController().currentDestination) {
+            DetailScaffold {
+                CharacterDetailCard(characterResult = characterResult) {
+                    findNavController().popBackStack()
+                }
+            }
         }
     }
 

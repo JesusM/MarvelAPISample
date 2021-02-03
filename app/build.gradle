@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -118,13 +119,14 @@ dependencies {
     // Compose
     def composeVersion = "1.0.0-alpha11"
     def composePagingVersion = "1.0.0-alpha06"
+    def accompanistVersion = "0.5.0"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"
     implementation "androidx.compose.material:material:$composeVersion"
     implementation "androidx.compose.runtime:runtime:$composeVersion"
     implementation "androidx.compose.runtime:runtime-livedata:$composeVersion"
-    implementation "dev.chrisbanes.accompanist:accompanist-coil:0.5.0"
+    implementation "dev.chrisbanes.accompanist:accompanist-coil:$accompanistVersion"
     implementation "androidx.paging:paging-compose:$composePagingVersion"
 
     // Testing

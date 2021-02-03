@@ -1,6 +1,5 @@
 package com.marvelsample.app.ui.characterslist.compose
 
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -29,7 +28,7 @@ class CharactersListTest {
             MainTheme {
                 val characters =
                     flowOf(PagingData.from(listOf(ListItem(1, expectedName, expectedImage))))
-                CharactersList(characters = characters, modifier = Modifier) {}
+                CharactersList(characters = characters) {}
             }
         }
 
@@ -41,7 +40,7 @@ class CharactersListTest {
     fun shouldDisplayError() {
         composeTestRule.setContent {
             MainTheme {
-                CharactersList(characters = createErrorFlow("error"), modifier = Modifier) {}
+                CharactersList(characters = createErrorFlow("error")) {}
             }
         }
 
