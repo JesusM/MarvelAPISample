@@ -8,7 +8,7 @@ import com.marvelsample.app.ui.base.compose.MainTheme
 @Composable
 fun ThemedScaffold(children: @Composable () -> Unit) {
     MainTheme {
-        Surface(color = MaterialTheme.colors.primary) {
+        Surface(color = MaterialTheme.colors.surface) {
             children()
         }
     }
