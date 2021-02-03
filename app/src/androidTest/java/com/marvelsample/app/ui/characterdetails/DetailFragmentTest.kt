@@ -1,6 +1,7 @@
 package com.marvelsample.app.ui.characterdetails
 
 import android.os.Bundle
+import androidx.fragment.app.testing.FragmentScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -113,7 +114,7 @@ class DetailFragmentTest {
         onView(withId(R.id.detail_screen_character_description)).check(matches(not(isDisplayed())))
     }
 
-    private fun launch(bundle : Bundle) {
-        com.marvelsample.app.ui.launch<DetailFragment>(bundle)
+    private fun launch(bundle : Bundle) : FragmentScenario<DetailFragment> {
+        return com.marvelsample.app.ui.launch(bundle)
     }
 }

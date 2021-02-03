@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.setupWithNavController
 import androidx.transition.TransitionInflater
 import com.marvelsample.app.R
 import com.marvelsample.app.core.model.base.error.ResourceError
@@ -58,6 +62,19 @@ class DetailFragment : Fragment() {
                     }
                 }
             })
+
+            val navController = findNavController()
+            val appBarConfiguration = AppBarConfiguration(navController.graph)
+
+            detailScreenToolbar.apply {
+                setupWithNavController(navController, appBarConfiguration)
+
+                // When linking toolbar to navigation controller, it will use a "left" arrow as up
+                // indicator. As we want a custom icon, we must set it again after linking step.
+                //
+                navigationIcon = ContextCompat.getDrawable(context, R.drawable.toolbar_navigation_icon)
+            }
+
             arguments?.let {
                 postponeEnterTransition()
                 viewModel.load(itemId)
