@@ -2,6 +2,7 @@ package com.marvelsample.app.ui.characterslist.compose
 
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.contentDescription
@@ -11,12 +12,33 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.marvelsample.app.ui.base.compose.Loading
+import com.marvelsample.app.ui.base.compose.MainTheme
 import com.marvelsample.app.ui.characterslist.ListItem
 import com.marvelsample.app.ui.utils.components.LazyPagingGridFor
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun CharactersList(
+fun CharactersList(characters: Flow<PagingData<ListItem>>, navigation : (characterId : Int) -> Unit) {
+    MainTheme {
+        Surface(color = MaterialTheme.colors.surface) {
+            Scaffold(
+                topBar = {
+                    TopAppBar(title = {
+                        Text(text = "Characters")
+                    })
+                },
+                bodyContent = {
+                    CharactersListContent(characters = characters) { characterId : Int ->
+                        navigation.invoke(characterId)
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun CharactersListContent(
     characters: Flow<PagingData<ListItem>>,
     modifier: Modifier = Modifier,
     onClick: (characterId: Int) -> Unit = {}
