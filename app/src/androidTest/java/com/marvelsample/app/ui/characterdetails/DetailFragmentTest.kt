@@ -8,10 +8,15 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.marvelsample.app.R
-import com.marvelsample.app.core.model.Character
+import com.marvelsample.app.core.model.ExternalItem
 import com.marvelsample.app.core.model.Thumbnail
+import com.marvelsample.app.core.model.base.Pager
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
+import com.marvelsample.app.core.model.character.Character
+import com.marvelsample.app.core.model.comic.Comic
+import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
+import com.marvelsample.app.core.usecases.characterdetails.comics.repository.CharacterComicsRepository
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
 import com.marvelsample.app.ui.createEmptyExternalCollection
 import com.marvelsample.app.ui.launchWithNavigationControllerAndCustomToolbar
@@ -38,7 +43,14 @@ class DetailFragmentTest {
                 named("characterDetailsRepository"),
                 override = true
             ) {
-                fakeRepository
+                fakeDetailsRepository
+            }
+
+            single<CharacterComicsRepository>(
+                named("characterComicsRepository"),
+                override = true
+            ) {
+                fakeComicsRepository
             }
         }
 
@@ -50,9 +62,9 @@ class DetailFragmentTest {
         unloadKoinModules(mockModule)
     }
 
-    private val fakeRepository: FakeRepository = FakeRepository()
+    private val fakeDetailsRepository = FakeDetailsRepository()
 
-    private class FakeRepository(
+    private class FakeDetailsRepository(
         var result: Resource<Character> = Resource.Error(ResourceError.EmptyContent)
     ) : CharacterDetailsRepository {
         override suspend fun getItem(id: Int): Resource<Character> {
@@ -61,25 +73,13 @@ class DetailFragmentTest {
     }
 
     @Test
-    fun shouldDisplayContent() {
+    fun shouldDisplayDetails() {
         val expectedId = 1
         val expectedName = "name"
         val expectedDescription = "description"
-        val element = Character(
-            expectedId,
-            expectedName,
-            expectedDescription,
-            Thumbnail("jpg", "a"),
-            createEmptyExternalCollection(),
-            createEmptyExternalCollection(),
-            "",
-            "",
-            createEmptyExternalCollection(),
-            createEmptyExternalCollection(),
-            emptyList()
-        )
+        val element = createFakeDetails(expectedId, expectedName, expectedDescription)
 
-        fakeRepository.result = Resource.Success(element)
+        fakeDetailsRepository.result = Resource.Success(element)
 
         launch(Bundle().apply {
             putInt("itemId", expectedId)
@@ -103,7 +103,7 @@ class DetailFragmentTest {
     @Test
     fun shouldDisplayError() {
         val errorMessage = "a"
-        fakeRepository.result = Resource.Error(ResourceError.RequestFailError(errorMessage))
+        fakeDetailsRepository.result = Resource.Error(ResourceError.RequestFailError(errorMessage))
 
         launch(Bundle().apply {
             putInt("itemId", 1)
@@ -121,10 +121,121 @@ class DetailFragmentTest {
         }
     }
 
-    private fun launch(bundle: Bundle): FragmentScenario<DetailFragment> {
-        return launchWithNavigationControllerAndCustomToolbar(
+    private fun launch(bundle: Bundle): FragmentScenario<DetailFragment> =
+        launchWithNavigationControllerAndCustomToolbar(
             bundle, fragmentCreation = {
                 DetailFragment()
             })
+
+    private fun createFakeDetails(
+        expectedId: Int = 1,
+        expectedName: String = "name",
+        expectedDescription: String = "description"
+    ): Character {
+        return Character(
+            expectedId,
+            expectedName,
+            expectedDescription,
+            Thumbnail("jpg", "a"),
+            createEmptyExternalCollection(),
+            createEmptyExternalCollection(),
+            "",
+            "",
+            createEmptyExternalCollection(),
+            createEmptyExternalCollection(),
+            emptyList()
+        )
     }
+
+    //region Comics
+
+    @Test
+    fun shouldDisplayComics() {
+        val expectedCharacterId = 1
+        val expectedComicId = "1"
+        val expectedComicTitle = "title"
+        fakeComicsRepository.result = Resource.Success(
+            Pager(
+                listOf(
+                    createFakeComics(
+                        expectedId = expectedComicId,
+                        expectedName = expectedComicTitle
+                    )
+                )
+            )
+        )
+
+        launch(Bundle().apply {
+            putInt("itemId", expectedCharacterId)
+        }).also {
+            onView(withId(R.id.horizontal_list_progress)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.horizontal_list)).check(matches(isDisplayed()))
+        }
+    }
+
+    @Test
+    fun shouldNotDisplayComicsIfError() {
+        val expectedCharacterId = 1
+        fakeComicsRepository.result = Resource.Error(ResourceError.EmptyContent)
+
+        launch(Bundle().apply {
+            putInt("itemId", expectedCharacterId)
+        }).also {
+            onView(withId(R.id.horizontal_list_progress)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.horizontal_list)).check(matches(not(isDisplayed())))
+        }
+    }
+
+    private val fakeComicsRepository = FakeComicsRepository()
+
+    private class FakeComicsRepository(
+        var result: Resource<Pager<Comic>> = Resource.Error(ResourceError.EmptyContent)
+    ) : CharacterComicsRepository {
+        override suspend fun getComics(
+            id: Int,
+            collectionQuery: CollectionRequestParams
+        ): Resource<Pager<Comic>> {
+            return result
+        }
+    }
+
+    private fun createFakeComics(
+        expectedId: String = "1",
+        expectedName: String = "name",
+        thumbnail: Thumbnail = Thumbnail("jpg", "a")
+    ): Comic {
+        return Comic(
+            expectedId,
+            "",
+            expectedName,
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            "",
+            emptyList(),
+            "",
+            emptyList(),
+            ExternalItem("", ""),
+            emptyList(),
+            emptyList(),
+            emptyList(),
+            emptyList(),
+            emptyList(),
+            thumbnail,
+            emptyList(),
+            createEmptyExternalCollection(),
+            createEmptyExternalCollection(),
+            createEmptyExternalCollection(),
+            createEmptyExternalCollection()
+        )
+    }
+
+    //endregion
 }

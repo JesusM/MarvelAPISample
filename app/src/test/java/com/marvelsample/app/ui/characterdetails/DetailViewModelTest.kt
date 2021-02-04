@@ -2,12 +2,13 @@ package com.marvelsample.app.ui.characterdetails
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.marvelsample.app.core.model.Character
 import com.marvelsample.app.core.model.ExternalCollection
 import com.marvelsample.app.core.model.Thumbnail
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
+import com.marvelsample.app.core.model.character.Character
 import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCase
+import com.marvelsample.app.core.usecases.characterdetails.comics.repository.CharacterComicsRepository
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
 import com.marvelsample.app.ui.base.model.Result
 import kotlinx.coroutines.Dispatchers
@@ -50,25 +51,26 @@ class DetailViewModelTest {
     private lateinit var detailsObserver: Observer<Result<CharacterModel>>
 
     @Test
-    fun `view model request posts loading state first`() = runBlockingTest {
-        val mock = mock(CharacterDetailsRepository::class.java)
+    fun `view model request posts details loading state first`() = runBlockingTest {
         viewModel = DetailViewModel(
-            CharacterDetailsUseCase(mock),
+            0,
+            createFakeUseCase(),
             dispatcher = testCoroutineDispatcher
         )
-        viewModel.itemObservable.observeForever(detailsObserver)
-        viewModel.load(0)
+        viewModel.itemDetailsObservable.observeForever(detailsObserver)
+        viewModel.load()
 
         verify(detailsObserver).onChanged(Result.Loading)
 
-        viewModel.itemObservable.removeObserver(detailsObserver)
+        viewModel.itemDetailsObservable.removeObserver(detailsObserver)
     }
 
     @Test
-    fun `view model posts success state`() = runBlockingTest {
+    fun `view model posts success details state`() = runBlockingTest {
         val expectedName = "name"
+        val expectedId = 1
         val element = Character(
-            1,
+            expectedId,
             expectedName,
             "",
             Thumbnail("", ""),
@@ -85,34 +87,43 @@ class DetailViewModelTest {
         val mockRepository = mock(CharacterDetailsRepository::class.java)
         Mockito.`when`(mockRepository.getItem(anyInt())).thenReturn(Resource.Success(element))
         viewModel = DetailViewModel(
-            CharacterDetailsUseCase(mockRepository),
+            expectedId,
+            createFakeUseCase(characterDetailsRepository = mockRepository),
             dispatcher = testCoroutineDispatcher
         )
-        viewModel.itemObservable.observeForever(detailsObserver)
+        viewModel.itemDetailsObservable.observeForever(detailsObserver)
 
-        viewModel.load(0)
+        viewModel.load()
 
         verify(detailsObserver).onChanged(Result.Success(repositoryCharacter))
 
-        viewModel.itemObservable.removeObserver(detailsObserver)
+        viewModel.itemDetailsObservable.removeObserver(detailsObserver)
     }
 
     @Test
-    fun `view model posts correct error state`() = runBlockingTest {
+    fun `view model posts correct details error state`() = runBlockingTest {
         val mockRepository = mock(CharacterDetailsRepository::class.java)
         val expectedError = ResourceError.EmptyContent
         Mockito.`when`(mockRepository.getItem(anyInt()))
             .thenReturn(Resource.Error(expectedError))
         viewModel = DetailViewModel(
-            CharacterDetailsUseCase(mockRepository),
+            1,
+            createFakeUseCase(characterDetailsRepository = mockRepository),
             dispatcher = testCoroutineDispatcher
         )
-        viewModel.itemObservable.observeForever(detailsObserver)
-        viewModel.load(0)
+        viewModel.itemDetailsObservable.observeForever(detailsObserver)
+        viewModel.load()
 
         verify(detailsObserver).onChanged(Result.Error(expectedError))
     }
 
     private fun createEmptyExternalCollection(): ExternalCollection =
         ExternalCollection(0, "", emptyList(), 0)
+
+    private fun createFakeUseCase(
+        characterDetailsRepository: CharacterDetailsRepository = mock(CharacterDetailsRepository::class.java),
+        comicsRepository: CharacterComicsRepository = mock(CharacterComicsRepository::class.java)
+    ): CharacterDetailsUseCase {
+        return CharacterDetailsUseCase(characterDetailsRepository, comicsRepository)
+    }
 }

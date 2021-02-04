@@ -1,11 +1,13 @@
 package com.marvelsample.app.di
 
 import com.marvelsample.app.BuildConfig
-import com.marvelsample.app.core.model.Character
+import com.marvelsample.app.core.model.character.Character
 import com.marvelsample.app.core.repository.memory.ItemMemoryRepository
 import com.marvelsample.app.core.repository.memory.PagedCollectionMemoryRepository
 import com.marvelsample.app.core.repository.network.ApiClient
 import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCase
+import com.marvelsample.app.core.usecases.characterdetails.comics.repository.CharacterComicsRepository
+import com.marvelsample.app.core.usecases.characterdetails.comics.repository.CharacterComicsNetworkRepository
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepositoryImpl
 import com.marvelsample.app.core.usecases.characterdetails.repository.memory.CharacterDetailMemoryRepository
@@ -62,10 +64,19 @@ val repositoryModule = module {
             get(named("charactersNetworkRepository")),
         )
     }
+
     single<CharacterDetailsRepository>(named("characterDetailsRepository")) {
         CharacterDetailsRepositoryImpl(
             get(named("characterMemoryRepository")),
             get(named("characterNetworkRepository")),
+        )
+    }
+
+    single<CharacterComicsRepository>(named("characterComicsRepository")) {
+        CharacterComicsNetworkRepository(
+            get(),
+            get(named("privateKey")),
+            get(named("publicKey"))
         )
     }
 
@@ -91,13 +102,16 @@ val userCases = module {
         CharactersListUseCase(get(named("charactersListRepository")))
     }
     single(named("detailUseCase")) {
-        CharacterDetailsUseCase(get(named("characterDetailsRepository")))
+        CharacterDetailsUseCase(
+            get(named("characterDetailsRepository")),
+            get(named("characterComicsRepository"))
+        )
     }
 }
 
 val viewModels = module {
-    viewModel(named("detailViewModel")) {
-        DetailViewModel(get(named("detailUseCase")))
+    viewModel(named("detailViewModel")) { (characterId : Int) ->
+        DetailViewModel(characterId, get(named("detailUseCase")))
     }
 
     viewModel(named("charactersListViewModel")) {

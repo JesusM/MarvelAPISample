@@ -1,8 +1,8 @@
 package com.marvelsample.app.ui.characterdetails.repository
 
-import com.marvelsample.app.core.model.Character
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
+import com.marvelsample.app.core.model.character.Character
 import com.marvelsample.app.core.repository.base.MainCoroutineRule
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepositoryImpl
 import com.marvelsample.app.core.usecases.characterdetails.repository.memory.CharacterDetailMemoryRepository
@@ -45,7 +45,7 @@ class CharacterDetailsRepositoryTest {
     }
 
     @Test
-    fun `should correctly return empty state if repositories don't have content`() =
+    fun `should correctly return details empty state if repositories don't have content`() =
         mainCoroutineRule.runBlockingTest {
             val emptyMemoryRepository =
                 Mockito.mock(CharacterDetailMemoryRepository::class.java)
@@ -66,7 +66,7 @@ class CharacterDetailsRepositoryTest {
         }
 
     @Test
-    fun `should correctly return memory item if available`() =
+    fun `should correctly return memory item details if available`() =
         mainCoroutineRule.runBlockingTest {
             val memoryRepository =
                 Mockito.mock(CharacterDetailMemoryRepository::class.java)
@@ -89,7 +89,7 @@ class CharacterDetailsRepositoryTest {
         }
 
     @Test
-    fun `should correctly return item from network if memory repository is empty`() =
+    fun `should correctly return item details from network if memory repository is empty`() =
         mainCoroutineRule.runBlockingTest {
             val networkElement = createFakeCharacter(1)
             val networkRepository = Mockito.mock(CharacterDetailsNetworkRepository::class.java)
@@ -114,7 +114,7 @@ class CharacterDetailsRepositoryTest {
         }
 
     @Test
-    fun `item from network is correctly added to memory repository`() =
+    fun `item details from network are correctly added to memory repository`() =
         mainCoroutineRule.runBlockingTest {
             val expectedElementId = 0
             val emptyMemoryRepository =

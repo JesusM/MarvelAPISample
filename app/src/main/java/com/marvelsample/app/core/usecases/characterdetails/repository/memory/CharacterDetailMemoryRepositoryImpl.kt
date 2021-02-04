@@ -1,6 +1,6 @@
 package com.marvelsample.app.core.usecases.characterdetails.repository.memory
 
-import com.marvelsample.app.core.model.Character
+import com.marvelsample.app.core.model.character.Character
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.repository.memory.ItemMemoryRepository
 

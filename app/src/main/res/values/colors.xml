@@ -2,12 +2,12 @@
 <resources>
     <color name="primaryColor">#b71c1c</color>
     <color name="primaryDarkColor">#7f0000</color>
-    <color name="secondaryColor">#f5f5f5</color>
+    <color name="secondaryColor">#9E9E9E</color>
     <color name="secondaryDarkColor">#c2c2c2</color>
     <color name="primaryTextColor">#ffffff</color>
     <color name="secondaryTextColor">#000000</color>
 
-    <color name="colorOnPrimary">#000000</color>
+    <color name="colorOnPrimary">#F1F1F1</color>
     <color name="colorOnSecondary">#000000</color>
     <color name="backgroundLight">#eeeeee</color>
     <color name="blackTransparent">#88000000</color>

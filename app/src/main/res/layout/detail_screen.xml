@@ -46,6 +46,10 @@
                 tools:text="This is a long description for this item, ensuring it can hold a few lines of text"
                 tools:visibility="visible" />
 
+            <include
+                android:id="@+id/characters_detail_comics_container"
+                layout="@layout/horizontal_list" />
+
         </androidx.appcompat.widget.LinearLayoutCompat>
 
     </androidx.appcompat.widget.LinearLayoutCompat>

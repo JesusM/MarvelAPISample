@@ -11,7 +11,7 @@ import androidx.navigation.testing.TestNavHostController
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.internal.runner.junit4.statement.UiThreadStatement
 import com.marvelsample.app.R
-import com.marvelsample.app.core.model.Character
+import com.marvelsample.app.core.model.character.Character
 import com.marvelsample.app.core.model.ExternalCollection
 import com.marvelsample.app.core.model.Thumbnail
 

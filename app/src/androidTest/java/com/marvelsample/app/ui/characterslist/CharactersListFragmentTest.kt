@@ -9,10 +9,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
 import com.marvelsample.app.R
-import com.marvelsample.app.core.model.Character
 import com.marvelsample.app.core.model.base.Pager
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
+import com.marvelsample.app.core.model.character.Character
 import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
 import com.marvelsample.app.core.usecases.characterslist.repository.CharactersListRepository
 import com.marvelsample.app.ui.createFakeCharacter

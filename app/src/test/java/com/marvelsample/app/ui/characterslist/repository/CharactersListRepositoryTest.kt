@@ -1,9 +1,9 @@
 package com.marvelsample.app.ui.characterslist.repository
 
-import com.marvelsample.app.core.model.Character
 import com.marvelsample.app.core.model.base.Pager
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
+import com.marvelsample.app.core.model.character.Character
 import com.marvelsample.app.core.repository.base.MainCoroutineRule
 import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
 import com.marvelsample.app.core.repository.memory.PagedCollectionMemoryRepository

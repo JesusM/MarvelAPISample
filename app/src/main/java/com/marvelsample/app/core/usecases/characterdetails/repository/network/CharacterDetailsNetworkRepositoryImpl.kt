@@ -1,10 +1,10 @@
 package com.marvelsample.app.core.usecases.characterdetails.repository.network
 
-import com.marvelsample.app.core.repository.base.generateHash
-import com.marvelsample.app.core.repository.network.ApiService
-import com.marvelsample.app.core.model.Character
 import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
+import com.marvelsample.app.core.model.character.Character
+import com.marvelsample.app.core.repository.base.generateHash
+import com.marvelsample.app.core.repository.network.ApiService
 import java.util.*
 
 class CharacterDetailsNetworkRepositoryImpl(
