@@ -14,6 +14,7 @@ import com.marvelsample.app.core.model.base.Resource
 import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
 import com.marvelsample.app.ui.createEmptyExternalCollection
+import com.marvelsample.app.ui.launchWithNavigationControllerAndCustomToolbar
 import org.hamcrest.Matchers.not
 import org.junit.After
 import org.junit.Before
@@ -82,17 +83,21 @@ class DetailFragmentTest {
 
         launch(Bundle().apply {
             putInt("itemId", expectedId)
-        })
+        }).also {
+            onView(withId(R.id.detail_screen_progress)).check(matches(not(isDisplayed())))
 
-        onView(withId(R.id.detail_screen_progress)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.detail_screen_character_description)).apply {
+                check(matches(isDisplayed()))
+                check(matches(withText(expectedDescription)))
+            }
 
-        onView(withId(R.id.detail_screen_character_description)).check(matches(isDisplayed()))
-        onView(withId(R.id.detail_screen_character_description)).check(matches(withText(expectedDescription)))
+            onView(withId(R.id.detail_screen_character_name)).apply {
+                check(matches(isDisplayed()))
+                check(matches(withText(expectedName)))
+            }
 
-        onView(withId(R.id.detail_screen_character_name)).check(matches(isDisplayed()))
-        onView(withId(R.id.detail_screen_character_name)).check(matches(withText(expectedName)))
-
-        onView(withId(R.id.detail_screen_header_image)).check(matches(isDisplayed()))
+            onView(withId(R.id.detail_screen_header_image)).check(matches(isDisplayed()))
+        }
     }
 
     @Test
@@ -102,19 +107,24 @@ class DetailFragmentTest {
 
         launch(Bundle().apply {
             putInt("itemId", 1)
-        })
+        }).also {
+            onView(withId(R.id.detail_screen_progress)).check(matches(not(isDisplayed())))
 
-        onView(withId(R.id.detail_screen_progress)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.detail_screen_header_image)).check(matches(not(isDisplayed())))
 
-        onView(withId(R.id.detail_screen_header_image)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.detail_screen_character_name)).apply {
+                check(matches(isDisplayed()))
+                check(matches(withText(errorMessage)))
+            }
 
-        onView(withId(R.id.detail_screen_character_name)).check(matches(isDisplayed()))
-        onView(withId(R.id.detail_screen_character_name)).check(matches(withText(errorMessage)))
-
-        onView(withId(R.id.detail_screen_character_description)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.detail_screen_character_description)).check(matches(not(isDisplayed())))
+        }
     }
 
-    private fun launch(bundle : Bundle) : FragmentScenario<DetailFragment> {
-        return com.marvelsample.app.ui.launch(bundle)
+    private fun launch(bundle: Bundle): FragmentScenario<DetailFragment> {
+        return launchWithNavigationControllerAndCustomToolbar(
+            bundle, fragmentCreation = {
+                DetailFragment()
+            })
     }
 }

@@ -1,14 +1,13 @@
 package com.marvelsample.app.ui.characterslist
 
-import androidx.navigation.Navigation
-import androidx.navigation.testing.TestNavHostController
-import androidx.test.core.app.ApplicationProvider
+import android.os.Bundle
+import androidx.fragment.app.testing.FragmentScenario
+import androidx.navigation.NavHostController
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
-import androidx.test.internal.runner.junit4.statement.UiThreadStatement
 import com.marvelsample.app.R
 import com.marvelsample.app.core.model.Character
 import com.marvelsample.app.core.model.base.Pager
@@ -17,7 +16,7 @@ import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
 import com.marvelsample.app.core.usecases.characterslist.repository.CharactersListRepository
 import com.marvelsample.app.ui.createFakeCharacter
-import com.marvelsample.app.ui.launch
+import com.marvelsample.app.ui.launchWithNavigationController
 import com.schibsted.spain.barista.interaction.BaristaListInteractions.clickListItem
 import junit.framework.Assert.assertEquals
 import org.hamcrest.CoreMatchers.not
@@ -76,26 +75,26 @@ class CharactersListFragmentTest {
 
         fakeRepository.result = Resource.Success(Pager(listOf(expectedElement)))
 
-        launch<CharactersListFragment>()
+        launch().also {
+            onView(withId(R.id.characters_list_progress)).check(matches(not(isDisplayed())))
+            onView(withId(R.id.characters_list)).check(matches(isDisplayed()))
+        }
 
-        onView(withId(R.id.characters_list_progress))
-            .check(matches(not(isDisplayed())))
-        onView(withId(R.id.characters_list))
-            .check(matches(isDisplayed()))
     }
 
     @Test
     fun shouldDisplayError() {
         fakeRepository.result = Resource.Error(ResourceError.EmptyContent)
 
-        launch<CharactersListFragment>()
+        launch().also {
+            onView(withId(R.id.characters_list_progress))
+                .check(matches(not(isDisplayed())))
+            onView(withId(R.id.characters_list_error_message)).apply {
+                check(matches(withText("No content")))
+                check(matches(isDisplayed()))
+            }
+        }
 
-        onView(withId(R.id.characters_list_progress))
-            .check(matches(not(isDisplayed())))
-        onView(withId(R.id.characters_list_error_message))
-            .check(matches(withText("No content")))
-        onView(withId(R.id.characters_list_error_message))
-            .check(matches(isDisplayed()))
     }
 
     @Test
@@ -105,22 +104,22 @@ class CharactersListFragmentTest {
 
         fakeRepository.result = Resource.Success(Pager(listOf(expectedElement)))
 
-        // Create a TestNavHostController
-        val navController = TestNavHostController(
-            ApplicationProvider.getApplicationContext())
-        UiThreadStatement.runOnUiThread {
-            navController.setGraph(R.navigation.navigation)
-        }
+        var navHostController: NavHostController? = null
 
         // Create a graphical FragmentScenario for the TitleScreen
-        val charactersListScenario = launch<CharactersListFragment>()
-
-        // Set the NavController property on the fragment
-        charactersListScenario.onFragment { fragment ->
-            Navigation.setViewNavController(fragment.requireView(), navController)
+        launchWithNavigationController(fragmentCreation = {
+            navHostController = it
+            CharactersListFragment()
+        }).also {
+            navHostController?.let {
+                clickListItem(R.id.characters_list, 0)
+                assertEquals(it.currentDestination?.id, R.id.detailsFragment)
+            }
         }
-
-        clickListItem(R.id.characters_list, 0)
-        assertEquals(navController.currentDestination?.id, R.id.detailsFragment)
     }
+
+    private fun launch(bundle: Bundle = Bundle()): FragmentScenario<CharactersListFragment> =
+        launchWithNavigationController(bundle, fragmentCreation = {
+            CharactersListFragment()
+        })
 }
