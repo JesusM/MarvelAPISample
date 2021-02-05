@@ -13,7 +13,7 @@ import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCa
 import com.marvelsample.app.core.usecases.characterdetails.comics.repository.CharacterComicsRepository
 import com.marvelsample.app.core.usecases.characterdetails.repository.CharacterDetailsRepository
 import com.marvelsample.app.createEmptyExternalCollection
-import com.marvelsample.app.ui.characterdetails.ComicsSource
+import com.marvelsample.app.ui.characterdetails.CharacterComicsSource
 import com.marvelsample.app.ui.characterdetails.comics.ComicListItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,7 +26,7 @@ import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
 @ExperimentalCoroutinesApi
-class ComicsSourceTest {
+class CharacterComicsSourceTest {
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
     private val testCoroutineDispatcher = TestCoroutineDispatcher()
@@ -50,7 +50,7 @@ class ComicsSourceTest {
         val expectedCharacterId = 1
         `when`(characterComicsRepository.getComics(expectedCharacterId, collectionQuery))
             .thenReturn(Resource.Error(expectedError))
-        val charactersSource = ComicsSource(
+        val charactersSource = CharacterComicsSource(
             expectedCharacterId,
             CharacterDetailsUseCase(
                 mock(CharacterDetailsRepository::class.java),
@@ -111,7 +111,7 @@ class ComicsSourceTest {
         `when`(characterComicsRepository.getComics(expectedCharacterId, params)).thenReturn(
             Resource.Success(Pager(expectedRepositoryContent))
         )
-        val load = ComicsSource(
+        val load = CharacterComicsSource(
             expectedCharacterId,
             CharacterDetailsUseCase(
                 mock(CharacterDetailsRepository::class.java),

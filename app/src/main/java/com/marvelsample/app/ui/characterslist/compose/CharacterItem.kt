@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.dp
+import com.marvelsample.app.ui.base.compose.Image
 import com.marvelsample.app.ui.characterslist.ListItem
 
 @Composable
@@ -33,7 +34,7 @@ fun CharacterListItem(character: ListItem, onClick: (Int) -> Unit) {
             verticalAlignment = Alignment.CenterVertically,
         ) {
             character.image?.let { image ->
-                CharacterImage(
+                Image(
                     image,
                     character.name,
                     modifier = Modifier

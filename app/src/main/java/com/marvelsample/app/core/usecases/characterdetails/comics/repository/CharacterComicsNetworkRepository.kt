@@ -27,9 +27,13 @@ class CharacterComicsNetworkRepository(
         )
         val networkComics = networkComicsResponse.body()?.data
         return if (networkComicsResponse.isSuccessful && networkComics != null) {
-            Resource.Success(networkComics)
+            if (networkComics.results.isEmpty()) {
+                Resource.Error(ResourceError.EmptyContent)
+            } else {
+                Resource.Success(networkComics)
+            }
         } else {
-            Resource.Error(ResourceError.EmptyContent)
+            Resource.Error(ResourceError.RequestFailError("Error"))
         }
     }
 }

@@ -21,7 +21,7 @@ import kotlinx.coroutines.launch
 class DetailViewModel(
     private val characterId: Int,
     private val useCase: CharacterDetailsUseCase,
-    private val comicsSource: ComicsSource = ComicsSource(characterId, useCase),
+    private val comicsSource: CharacterComicsSource = CharacterComicsSource(characterId, useCase),
     private val dispatcher: CoroutineDispatcher = Dispatchers.IO
 ) : ViewModel() {
     private var _item = MutableLiveData<Result<CharacterModel>>()

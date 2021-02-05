@@ -14,11 +14,11 @@ import androidx.paging.compose.collectAsLazyPagingItems
 import com.marvelsample.app.ui.base.compose.Loading
 import com.marvelsample.app.ui.base.compose.MainTheme
 import com.marvelsample.app.ui.characterslist.ListItem
-import com.marvelsample.app.ui.utils.components.LazyPagingGridFor
+import com.marvelsample.app.ui.utils.components.LazyPagingColumnFor
 import kotlinx.coroutines.flow.Flow
 
 @Composable
-fun CharactersList(characters: Flow<PagingData<ListItem>>, navigation : (characterId : Int) -> Unit) {
+fun CharactersList(characters: Flow<PagingData<ListItem>>, navigation: (characterId: Int) -> Unit) {
     MainTheme {
         Surface(color = MaterialTheme.colors.surface) {
             Scaffold(
@@ -28,7 +28,7 @@ fun CharactersList(characters: Flow<PagingData<ListItem>>, navigation : (charact
                     })
                 },
                 bodyContent = {
-                    CharactersListContent(characters = characters) { characterId : Int ->
+                    CharactersListContent(characters = characters) { characterId: Int ->
                         navigation.invoke(characterId)
                     }
                 }
@@ -45,7 +45,7 @@ private fun CharactersListContent(
 ) {
     val lazyCharacters: LazyPagingItems<ListItem> = characters.collectAsLazyPagingItems()
 
-    LazyPagingGridFor(
+    LazyPagingColumnFor(
         items = lazyCharacters,
         modifier = modifier.semantics {
             contentDescription = "Characters list"
@@ -62,10 +62,18 @@ private fun CharactersListContent(
             lazyCharacters.apply {
                 when {
                     loadState.refresh is LoadState.Loading -> {
-                        Loading(modifier = Modifier)
+                        Loading(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                        )
                     }
                     loadState.append is LoadState.Loading -> {
-                        Loading(modifier = Modifier)
+                        Loading(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight()
+                        )
                     }
                     loadState.refresh is LoadState.Error -> {
                         val error = lazyCharacters.loadState.refresh as LoadState.Error

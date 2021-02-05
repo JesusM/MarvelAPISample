@@ -9,7 +9,7 @@ import com.marvelsample.app.core.repository.base.queries.CollectionRequestParams
 import com.marvelsample.app.core.usecases.characterdetails.CharacterDetailsUseCase
 import com.marvelsample.app.ui.characterdetails.comics.ComicListItem
 
-class ComicsSource(
+class CharacterComicsSource(
     private val characterId: Int,
     private val characterDetailsUseCase: CharacterDetailsUseCase
 ) : PagingSource<Int, ComicListItem>() {
@@ -17,10 +17,7 @@ class ComicsSource(
         val page = params.key ?: 0
         val pagedCollection = characterDetailsUseCase.getCharacterComics(
             characterId,
-            CollectionRequestParams(
-                page,
-                params.loadSize
-            )
+            CollectionRequestParams(page, params.loadSize)
         )
         return when (pagedCollection) {
             is Resource.Error -> {

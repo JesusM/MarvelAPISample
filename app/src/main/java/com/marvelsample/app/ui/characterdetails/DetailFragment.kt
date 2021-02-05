@@ -11,11 +11,16 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
+import androidx.paging.PagingData
 import androidx.transition.TransitionInflater
+import com.marvelsample.app.core.model.base.error.ResourceError
 import com.marvelsample.app.databinding.DetailScreenBinding
 import com.marvelsample.app.ui.base.model.Result
-import com.marvelsample.app.ui.characterdetails.compose.CharacterDetailCard
+import com.marvelsample.app.ui.characterdetails.comics.ComicListItem
+import com.marvelsample.app.ui.characterdetails.compose.CharacterDetailBody
 import com.marvelsample.app.ui.characterdetails.compose.DetailScaffold
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flowOf
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
 import org.koin.core.qualifier.named
@@ -46,17 +51,20 @@ class DetailFragment : Fragment() {
 
         DetailScreenBinding.bind(view).apply {
             composeView.setContent {
-                Bind(characterResult = viewModel.itemDetailsObservable.observeAsState(Result.Loading).value)
+                Bind(
+                    viewModel.itemDetailsObservable.observeAsState(Result.Loading).value,
+                    viewModel.loadComics()
+                )
             }
             viewModel.load()
         }
     }
 
     @Composable
-    fun Bind(characterResult: Result<CharacterModel>) {
+    fun Bind(characterDetails: Result<CharacterModel>, comics: Flow<PagingData<ComicListItem>>) {
         Crossfade(current = findNavController().currentDestination) {
             DetailScaffold {
-                CharacterDetailCard(characterResult = characterResult) {
+                CharacterDetailBody(characterDetails, comics) {
                     findNavController().popBackStack()
                 }
             }
@@ -72,6 +80,43 @@ class DetailFragment : Fragment() {
             "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784.jpg"
         )
 
-        Bind(characterResult = Result.Success(character))
+        val comics = listOf(
+            ComicListItem(
+                "3",
+                "Character's comic 1",
+                "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784.jpg"
+            )
+        )
+
+        Bind(characterDetails = Result.Success(character), flowOf(PagingData.from(comics)))
+    }
+
+    @Preview(name = "Character preview")
+    @Composable
+    fun DefaultPreviewWithDetailsError() {
+        val comics = listOf(
+            ComicListItem(
+                "3",
+                "Character's comic 1",
+                "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784.jpg"
+            )
+        )
+
+        Bind(
+            characterDetails = Result.Error(ResourceError.EmptyContent),
+            flowOf(PagingData.from(comics))
+        )
+    }
+
+    @Preview(name = "Character preview")
+    @Composable
+    fun DefaultPreviewWithoutComics() {
+        val character = CharacterModel(
+            "3-D Man",
+            "3-D Man Description",
+            "http://i.annihil.us/u/prod/marvel/i/mg/c/e0/535fecbbb9784.jpg"
+        )
+
+        Bind(characterDetails = Result.Success(character), flowOf(PagingData.from(emptyList())))
     }
 }

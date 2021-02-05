@@ -1,8 +1,8 @@
-package com.marvelsample.app.ui.characterslist.compose
+package com.marvelsample.app.ui.base.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -13,9 +13,9 @@ import com.marvelsample.app.R
 import dev.chrisbanes.accompanist.coil.CoilImage
 
 @Composable
-fun CharacterImage(
+fun Image(
     imageUrl: String?,
-    characterName: String,
+    imageLabel: String,
     modifier: Modifier = Modifier,
     contentDescription: String? = null
 ) {
@@ -25,16 +25,16 @@ fun CharacterImage(
         fadeIn = true,
         contentScale = ContentScale.Crop,
         loading = {
-            Box(Modifier.fillMaxWidth()) {
+            Box(Modifier.fillMaxSize()) {
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
         },
         error = {
             Image(
                 imageVector = vectorResource(R.drawable.ic_baseline_face_24),
-                contentDescription = contentDescription ?: "Character $characterName error image."
+                contentDescription = contentDescription ?: "Image $imageLabel error image."
             )
         },
-        contentDescription = contentDescription ?: "Character $characterName image."
+        contentDescription = contentDescription ?: "$imageLabel image."
     )
 }
