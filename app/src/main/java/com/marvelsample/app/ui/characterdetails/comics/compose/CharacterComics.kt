@@ -48,7 +48,7 @@ fun CharacterComics(
         LazyPagingRowFor(
             items = lazyPagingItems,
             modifier = modifier
-                .padding(start = 16.dp, top = 8.dp, bottom = 8.dp)
+                .padding(top = 8.dp, bottom = 8.dp)
                 .semantics {
                     contentDescription = "Character comics list"
                 },

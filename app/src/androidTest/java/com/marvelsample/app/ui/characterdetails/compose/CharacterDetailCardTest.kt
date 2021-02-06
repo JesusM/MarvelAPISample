@@ -25,10 +25,9 @@ class CharacterDetailCardTest {
 
         // Start the app
         composeTestRule.setContent {
-            CharacterDetailCard(character = element, modifier = Modifier)
+            CharacterDetailCard(modifier = Modifier, character = element)
         }
 
-        composeTestRule.onNodeWithContentDescription("Character detail image").assertIsDisplayed()
         composeTestRule.onNodeWithText(expectedName).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Character detail description").assertIsDisplayed()
     }
@@ -42,11 +41,10 @@ class CharacterDetailCardTest {
 
         // Start the app
         composeTestRule.setContent {
-            CharacterDetailCard(character = element, modifier = Modifier)
+            CharacterDetailCard(modifier = Modifier, character = element)
         }
 
         composeTestRule.onNodeWithText(expectedName).assertIsDisplayed()
         composeTestRule.onNodeWithContentDescription("Character detail description").assertDoesNotExist()
-        composeTestRule.onNodeWithContentDescription("Character detail image").assertIsDisplayed()
     }
 }

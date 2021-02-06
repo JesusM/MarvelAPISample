@@ -1,27 +1,38 @@
 package com.marvelsample.app.ui.characterdetails.compose
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.Layout
+import androidx.compose.ui.platform.AmbientDensity
+import androidx.compose.ui.res.dimensionResource
+import androidx.compose.ui.unit.Constraints
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.lerp
 import androidx.paging.PagingData
+import com.marvelsample.app.R
+import com.marvelsample.app.ui.base.compose.Image
 import com.marvelsample.app.ui.base.compose.Loading
 import com.marvelsample.app.ui.base.model.Result
 import com.marvelsample.app.ui.characterdetails.CharacterModel
 import com.marvelsample.app.ui.characterdetails.comics.ComicListItem
 import com.marvelsample.app.ui.characterdetails.comics.compose.CharacterComics
 import kotlinx.coroutines.flow.Flow
+import kotlin.math.max
+import kotlin.math.min
+
+private val CollapsedImageSize = 50.dp
 
 @Composable
 fun CharacterDetailBody(
     characterResult: Result<CharacterModel>,
     comics: Flow<PagingData<ComicListItem>>,
-    up : () -> Unit
+    upPress: () -> Unit
 ) {
     Box(
         modifier = Modifier
@@ -41,17 +52,67 @@ fun CharacterDetailBody(
                         .fillMaxWidth()
                         .verticalScroll(scroll)
                 ) {
-                    CharacterDetailCard(character = characterResult.result)
-                    CharacterComics(
-                        comics = comics,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                    )
+                    val initialImageMaxSize =
+                        dimensionResource(R.dimen.collection_item_detail_height)
+                    val collapseRange =
+                        with(AmbientDensity.current) { (initialImageMaxSize).toPx() }
+                    val collapseFraction = (scroll.value / collapseRange).coerceIn(0f, 1f)
+
+                    CollapsingImageLayout(
+                        collapseFraction = collapseFraction,
+                        modifier = Modifier,
+                        initialImageMaxSize = initialImageMaxSize
+                    ) {
+                        Image(
+                            imageUrl = characterResult.result.image,
+                            imageLabel = characterResult.result.name,
+                            modifier = Modifier.height(initialImageMaxSize),
+                            contentDescription = "Character detail image"
+                        )
+                    }
+                    Surface {
+                        Column {
+                            CharacterDetailCard(
+                                character = characterResult.result
+                            )
+                            CharacterComics(
+                                comics = comics,
+                                modifier = Modifier.fillMaxWidth()
+                            )
+                        }
+                    }
                 }
             }
         }
-        Up {
-            up.invoke()
+        Up(upPress)
+    }
+}
+
+@Composable
+private fun CollapsingImageLayout(
+    collapseFraction: Float,
+    modifier: Modifier = Modifier,
+    initialImageMaxSize: Dp,
+    content: @Composable () -> Unit
+) {
+    Layout(
+        modifier = modifier,
+        content = content
+    ) { measurables, constraints ->
+        check(measurables.size == 1)
+        val imageMaxHeight = min(initialImageMaxSize.toIntPx(), constraints.maxWidth)
+        val imageMinHeight = max(CollapsedImageSize.toIntPx(), constraints.minWidth)
+        val imageHeight =
+            lerp(imageMaxHeight.toDp(), imageMinHeight.toDp(), collapseFraction).toIntPx()
+        val imagePlaceable =
+            measurables[0].measure(Constraints.fixed(constraints.maxWidth, imageHeight))
+
+        val imageY = lerp(0.dp, imageMaxHeight.toDp(), collapseFraction).toIntPx()
+        layout(
+            width = constraints.maxWidth,
+            height = imageHeight
+        ) {
+            imagePlaceable.place(0, imageY)
         }
     }
 }

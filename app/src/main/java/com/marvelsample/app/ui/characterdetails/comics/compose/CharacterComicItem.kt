@@ -24,7 +24,6 @@ fun CharacterComicListItem(item: ComicListItem, onClick: (String) -> Unit) {
             .clearAndSetSemantics {
                 contentDescription = "Character ${item.name} comic card."
             }
-            .padding(start = 8.dp)
             .clickable(onClick = {
                 onClick(item.id)
             })
