@@ -62,7 +62,7 @@ class DetailFragment : Fragment() {
 
     @Composable
     fun Bind(characterDetails: Result<CharacterModel>, comics: Flow<PagingData<ComicListItem>>) {
-        Crossfade(current = findNavController().currentDestination) {
+        Crossfade(targetState = findNavController().currentDestination) {
             DetailScaffold {
                 CharacterDetailBody(characterDetails, comics) {
                     findNavController().popBackStack()
