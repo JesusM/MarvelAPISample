@@ -58,7 +58,8 @@ android {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
     composeOptions {
-        kotlinCompilerExtensionVersion "1.0.0-alpha11"
+        kotlinCompilerVersion "1.4.30"
+        kotlinCompilerExtensionVersion "1.0.0-alpha12"
     }
 
     packagingOptions {
@@ -117,8 +118,8 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
 
     // Compose
-    def composeVersion = "1.0.0-alpha11"
-    def composePagingVersion = "1.0.0-alpha06"
+    def composeVersion = "1.0.0-alpha12"
+    def composePagingVersion = "1.0.0-alpha07"
     def accompanistVersion = "0.5.0"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
