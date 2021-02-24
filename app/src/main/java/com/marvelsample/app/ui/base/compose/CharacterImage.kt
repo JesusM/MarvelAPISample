@@ -2,7 +2,6 @@ package com.marvelsample.app.ui.base.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -22,10 +21,9 @@ fun Image(
     CoilImage(
         data = imageUrl ?: R.drawable.ic_baseline_face_24,
         modifier = modifier,
-        fadeIn = true,
         contentScale = ContentScale.Crop,
         loading = {
-            Box(Modifier.fillMaxSize()) {
+            Box(Modifier.matchParentSize()) {
                 CircularProgressIndicator(Modifier.align(Alignment.Center))
             }
         },
