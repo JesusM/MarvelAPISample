@@ -38,7 +38,7 @@ fun CharacterListItem(character: ListItem, onClick: (Int) -> Unit) {
                     image,
                     character.name,
                     modifier = Modifier
-                        .preferredSize(90.dp)
+                        .size(90.dp)
                 )
             }
             CharacterTitle(

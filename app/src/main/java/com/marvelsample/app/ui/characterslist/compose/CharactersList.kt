@@ -27,7 +27,7 @@ fun CharactersList(characters: Flow<PagingData<ListItem>>, navigation: (characte
                         Text(text = "Characters")
                     })
                 },
-                bodyContent = {
+                content = {
                     CharactersListContent(characters = characters) { characterId: Int ->
                         navigation.invoke(characterId)
                     }

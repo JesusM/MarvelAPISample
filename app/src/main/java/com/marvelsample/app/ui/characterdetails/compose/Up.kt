@@ -2,7 +2,7 @@ package com.marvelsample.app.ui.characterdetails.compose
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.preferredSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Icon
 import androidx.compose.material.IconButton
@@ -21,7 +21,7 @@ fun Up(upPress: () -> Unit) {
         onClick = upPress,
         modifier = Modifier
             .padding(horizontal = 16.dp, vertical = 10.dp)
-            .preferredSize(36.dp)
+            .size(36.dp)
             .background(
                 color = Color(0xff121212).copy(alpha = 0.32f),
                 shape = CircleShape

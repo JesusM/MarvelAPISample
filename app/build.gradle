@@ -118,9 +118,9 @@ dependencies {
     implementation "org.koin:koin-androidx-viewmodel:$koinVersion"
 
     // Compose
-    def composeVersion = "1.0.0-alpha12"
-    def composePagingVersion = "1.0.0-alpha07"
-    def accompanistVersion = "0.5.1"
+    def composeVersion = "1.0.0-beta01"
+    def composePagingVersion = "1.0.0-alpha08"
+    def accompanistVersion = "0.6.0"
     implementation "androidx.compose.ui:ui:$composeVersion"
     implementation "androidx.compose.foundation:foundation:$composeVersion"
     implementation "androidx.compose.ui:ui-tooling:$composeVersion"

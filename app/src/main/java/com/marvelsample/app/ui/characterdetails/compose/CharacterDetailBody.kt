@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.Layout
-import androidx.compose.ui.platform.AmbientDensity
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.unit.Constraints
 import androidx.compose.ui.unit.Dp
@@ -46,7 +46,7 @@ fun CharacterDetailBody(
                 DetailsError(error = characterResult.error)
             }
             is Result.Success -> {
-                val scroll = rememberScrollState(0f)
+                val scroll = rememberScrollState(0)
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -54,8 +54,7 @@ fun CharacterDetailBody(
                 ) {
                     val initialImageMaxSize =
                         dimensionResource(R.dimen.collection_item_detail_height)
-                    val collapseRange =
-                        with(AmbientDensity.current) { (initialImageMaxSize).toPx() }
+                    val collapseRange = with(LocalDensity.current) { (initialImageMaxSize).toPx() }
                     val collapseFraction = (scroll.value / collapseRange).coerceIn(0f, 1f)
 
                     CollapsingImageLayout(
@@ -100,14 +99,14 @@ private fun CollapsingImageLayout(
         content = content
     ) { measurables, constraints ->
         check(measurables.size == 1)
-        val imageMaxHeight = min(initialImageMaxSize.toIntPx(), constraints.maxWidth)
-        val imageMinHeight = max(CollapsedImageSize.toIntPx(), constraints.minWidth)
+        val imageMaxHeight = min(initialImageMaxSize.toPx().toInt(), constraints.maxWidth)
+        val imageMinHeight = max(CollapsedImageSize.toPx().toInt(), constraints.minWidth)
         val imageHeight =
-            lerp(imageMaxHeight.toDp(), imageMinHeight.toDp(), collapseFraction).toIntPx()
+            lerp(imageMaxHeight.toDp(), imageMinHeight.toDp(), collapseFraction).toPx().toInt()
         val imagePlaceable =
             measurables[0].measure(Constraints.fixed(constraints.maxWidth, imageHeight))
 
-        val imageY = lerp(0.dp, imageMaxHeight.toDp(), collapseFraction).toIntPx()
+        val imageY = lerp(0.dp, imageMaxHeight.toDp(), collapseFraction).toPx().toInt()
         layout(
             width = constraints.maxWidth,
             height = imageHeight

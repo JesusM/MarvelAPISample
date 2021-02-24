@@ -8,7 +8,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.res.painterResource
 import com.marvelsample.app.R
 import dev.chrisbanes.accompanist.coil.CoilImage
 
@@ -31,7 +31,7 @@ fun Image(
         },
         error = {
             Image(
-                imageVector = vectorResource(R.drawable.ic_baseline_face_24),
+                painter = painterResource(R.drawable.ic_baseline_face_24),
                 contentDescription = contentDescription ?: "Image $imageLabel error image."
             )
         },
