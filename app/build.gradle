@@ -58,8 +58,7 @@ android {
         execution 'ANDROIDX_TEST_ORCHESTRATOR'
     }
     composeOptions {
-        kotlinCompilerVersion "1.4.30"
-        kotlinCompilerExtensionVersion "1.0.0-alpha12"
+        kotlinCompilerExtensionVersion '1.0.0-beta01'
     }
 
     packagingOptions {
