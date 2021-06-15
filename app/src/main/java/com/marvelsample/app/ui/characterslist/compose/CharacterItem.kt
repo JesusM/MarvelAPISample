@@ -22,14 +22,14 @@ fun CharacterListItem(character: ListItem, onClick: (Int) -> Unit) {
             .clearAndSetSemantics {
                 contentDescription = "Character ${character.name} card."
             }
-            .clickable(onClick = {
-                onClick(character.id)
-            })
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(all = 8.dp),
+                .padding(all = 8.dp)
+                .clickable(onClick = {
+                    onClick(character.id)
+                }),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
