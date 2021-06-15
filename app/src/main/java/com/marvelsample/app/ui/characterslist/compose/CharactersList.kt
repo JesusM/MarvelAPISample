@@ -1,7 +1,6 @@
 package com.marvelsample.app.ui.characterslist.compose
 
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -44,7 +43,6 @@ private fun CharactersListContent(
     onClick: (characterId: Int) -> Unit = {}
 ) {
     val lazyCharacters: LazyPagingItems<ListItem> = characters.collectAsLazyPagingItems()
-
     LazyPagingColumnFor(
         items = lazyCharacters,
         modifier = modifier.semantics {
@@ -64,23 +62,20 @@ private fun CharactersListContent(
                     loadState.refresh is LoadState.Loading -> {
                         Loading(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight()
+                                .fillMaxSize()
                         )
                     }
                     loadState.append is LoadState.Loading -> {
                         Loading(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight()
+                                .fillMaxSize()
                         )
                     }
                     loadState.refresh is LoadState.Error -> {
                         val error = lazyCharacters.loadState.refresh as LoadState.Error
                         ErrorList(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(),
+                                .fillMaxSize(),
                             error = error
                         )
                     }
@@ -88,28 +83,11 @@ private fun CharactersListContent(
                         val error = lazyCharacters.loadState.append as LoadState.Error
                         ErrorList(
                             modifier = Modifier
-                                .fillMaxWidth()
-                                .fillMaxHeight(),
+                                .fillMaxSize(),
                             error = error
                         )
                     }
                 }
             }
         })
-
-//    LazyColumn {
-//        itemsIndexed(lazyCharacters) { _, item ->
-//            if (item != null) {
-//                CharacterListItem(
-//                    character = item,
-//                    onClick = { characterId ->
-//                        val intent =
-//                            Intent(context, DetailActivity::class.java)
-//                        intent.putExtra(DetailActivity.ITEM_ID_ARG, characterId)
-//                        context.startActivity(intent)
-//                    }
-//                )
-//            }
-//        }
-//    }
 }
